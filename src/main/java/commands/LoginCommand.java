@@ -4,7 +4,9 @@ import commands.utils.CommandUtils;
 import entities.User;
 import entities.UserType;
 import manager.PagesJsp;
-import services.LoginService;
+import services.LoginServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.LoginService;
 import utils.PasswordCrypt;
 
 import javax.servlet.ServletException;
@@ -18,8 +20,9 @@ public class LoginCommand implements Command{
         String page = null;
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        User user = LoginService.getUser(email);
-        UserType userType = LoginService.getUserType(email);
+        LoginService service = ServiceFactory.getLoginService();
+        User user = service.getUser(email);
+        UserType userType = service.getUserType(email);
         if (user == null) {
             page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
         }else{

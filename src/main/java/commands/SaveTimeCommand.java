@@ -2,7 +2,9 @@ package commands;
 
 import entities.User;
 import manager.PagesJsp;
-import services.AssignmentsService;
+import services.AssignmentsServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.AssignmentsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,8 @@ public class SaveTimeCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String description = request.getParameter("description");
         String time = request.getParameter("time");
-        AssignmentsService.saveTime(((User)(request.getSession().getAttribute("user"))).getEmail(), description,time);
+        AssignmentsService service = ServiceFactory.getAssignmentsService();
+        service.saveTime(((User)(request.getSession().getAttribute("user"))).getEmail(), description,time);
         return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
     }
 }

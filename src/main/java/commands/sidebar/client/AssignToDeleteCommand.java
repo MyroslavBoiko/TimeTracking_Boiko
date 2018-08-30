@@ -5,7 +5,9 @@ import commands.utils.Paginator;
 import entities.Assignment;
 import entities.User;
 import manager.PagesJsp;
-import services.AssignmentsService;
+import services.AssignmentsServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.AssignmentsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +18,9 @@ import java.util.List;
 public class AssignToDeleteCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        AssignmentsService service = ServiceFactory.getAssignmentsService();
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
-        List<Assignment> assignments = AssignmentsService.getUserAssignments(email);
+        List<Assignment> assignments = service.getUserAssignments(email);
         Paginator<Assignment> paginator = new Paginator<>(assignments, 4);
         String pageParameter = request.getParameter("page");
         if (pageParameter != null) {

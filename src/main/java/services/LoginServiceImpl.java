@@ -6,10 +6,24 @@ import dao.interfaces.UserTypeDao;
 import entities.User;
 import entities.UserType;
 import org.apache.log4j.Logger;
+import services.interfaces.LoginService;
+import services.interfaces.Service;
 
-public class LoginService{
+public class LoginServiceImpl implements LoginService {
 
-    private static final Logger LOGGER = Logger.getLogger(LoginService.class);
+    private static final Logger LOGGER = Logger.getLogger(LoginServiceImpl.class);
+
+
+    private static LoginServiceImpl instance;
+
+    public static LoginServiceImpl getInstance(){
+        if(instance == null){
+            instance = new LoginServiceImpl();
+        }
+        return instance;
+    }
+
+    private LoginServiceImpl(){}
 
     public static boolean isRegistered(String email, String password){
         UserDao userDao = DaoFactory.createUserDao();
@@ -27,10 +41,11 @@ public class LoginService{
         return false;
     }
 
-    public static UserType getUserType(String email){
+    @Override
+    public UserType getUserType(String email){
         UserTypeDao userTypeDao = DaoFactory.createUserTypeDao();
         UserDao userDao = DaoFactory.createUserDao();
-        UserType result = null;
+        UserType result;
         try{
             User user = userDao.findWhereEmailEquals(email);
             result = userTypeDao.findWhereUserTypeIdEquals(user.getUserTypeId());
@@ -41,7 +56,8 @@ public class LoginService{
         return null;
     }
 
-    public static User getUser(String email){
+    @Override
+    public User getUser(String email){
         UserDao userDao = DaoFactory.createUserDao();
         User result;
         try{

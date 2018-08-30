@@ -3,8 +3,9 @@ package commands.sidebar.client;
 import commands.Command;
 import entities.User;
 import manager.PagesJsp;
-import services.AssignmentsService;
-import services.RequestsService;
+import services.RequestsServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.RequestsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,8 @@ public class RequestToDeleteCommand implements Command {
         String[] temp = request.getParameter("request").split(":",2);
         String description = temp[0].trim();
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
-        RequestsService.createRequestToDelete(email, description);
+        RequestsService service = ServiceFactory.getRequestsService();
+        service.createRequestToDelete(email, description);
         return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
     }
 }

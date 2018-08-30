@@ -1,9 +1,7 @@
 package commands.sidebar.client;
 
 import commands.Command;
-import entities.Assignment;
 import manager.PagesJsp;
-import services.AssignmentsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
