@@ -1,7 +1,9 @@
 package dao.impl;
 
 import dao.interfaces.ActivityDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.Activity;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
@@ -33,6 +35,8 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String SQL_SELECT_BY_DESCRIPTION = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_DESCRIPTION + " = ?";
 
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
+
     private ActivityDaoImpl() {}
 
     public static ActivityDaoImpl getInstance(){
@@ -61,11 +65,15 @@ public class ActivityDaoImpl implements ActivityDao {
     @Override
     public List<Activity> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Activity> result = new ArrayList<>();
-        try(Connection connection = Datasource.getDataSource().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql),params);
-                ResultSet resultSet = statement.executeQuery()){
+//        try(Connection connection = Datasource.getInstance().getConnection();
+//            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql),params);
+//            ResultSet resultSet = statement.executeQuery()){
+        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+            ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
                 Activity activity = new Activity();
+
                 activity.setActivityId(resultSet.getLong(COLUMN_ACTIVITY_ID_PK));
                 activity.setDescription(resultSet.getString(COLUMN_ACTIVITY_DESCRIPTION));
                 result.add(activity);
@@ -79,7 +87,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public void insertNewActivity(Activity activity) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_ACTIVITY),
                     activity.getDescription())) {
             statement.executeUpdate();

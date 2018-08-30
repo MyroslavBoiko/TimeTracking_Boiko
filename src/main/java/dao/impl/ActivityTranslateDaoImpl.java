@@ -71,9 +71,9 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
     @Override
     public List<ActivityTranslate> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<ActivityTranslate> result = new ArrayList<>();
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
-                ResultSet resultSet = statement.executeQuery()){
+            ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
                 ActivityTranslate activityTranslate = new ActivityTranslate();
                 activityTranslate.setTranslateId(resultSet.getLong(COLUMN_TRANSLATE_ID_PK));
@@ -91,7 +91,7 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
 
     @Override
     public void insertNewActivityTranslate(ActivityTranslate activityTranslate) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_TRANSLATE),
                     activityTranslate.getActivityId(), activityTranslate.getActivityId(), activityTranslate.getDescription())){
             statement.executeUpdate();

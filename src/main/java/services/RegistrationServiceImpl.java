@@ -5,11 +5,26 @@ import dao.interfaces.UserDao;
 import dao.interfaces.UserTypeDao;
 import entities.User;
 import org.apache.log4j.Logger;
+import services.interfaces.RegistrationService;
+import services.interfaces.Service;
 
-public class RegistrationService {
-    private static final Logger LOGGER = Logger.getLogger(RegistrationService.class);
+public class RegistrationServiceImpl implements RegistrationService {
 
-    public static boolean performRegistration(User user){
+    private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
+
+    private static RegistrationServiceImpl instance;
+
+    public static RegistrationServiceImpl getInstance(){
+        if(instance == null){
+            instance = new RegistrationServiceImpl();
+        }
+        return instance;
+    }
+
+    private RegistrationServiceImpl(){}
+
+    @Override
+    public boolean performRegistration(User user){
         UserTypeDao userTypeDao = DaoFactory.createUserTypeDao();
         try{
             user.setUserTypeId(userTypeDao.findWhereTypeNameEquals("Client").getUserTypeId());

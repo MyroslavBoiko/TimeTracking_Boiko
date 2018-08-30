@@ -4,7 +4,9 @@ import commands.Command;
 import commands.utils.Paginator;
 import javafx.util.Pair;
 import manager.PagesJsp;
-import services.RequestsService;
+import services.RequestsServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.RequestsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +17,8 @@ import java.util.List;
 public class ShowRequestsToDeleteCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Pair<String,String>> deleteRequests = RequestsService.outputDeleteRequests();
+        RequestsService service = ServiceFactory.getRequestsService();
+        List<Pair<String,String>> deleteRequests = service.outputDeleteRequests();
         Paginator<Pair<String,String>> paginator = new Paginator<>(deleteRequests, 4);
         String pageParameter = request.getParameter("page");
         if (pageParameter != null) {

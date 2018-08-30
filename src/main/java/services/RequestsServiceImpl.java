@@ -1,19 +1,36 @@
 package services;
 
+import annotation.Transaction;
 import dao.DaoFactory;
 import dao.interfaces.*;
 import entities.*;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
+import services.interfaces.RequestsService;
+import services.interfaces.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestsService {
+public class RequestsServiceImpl implements RequestsService {
 
-    private static final Logger LOGGER = Logger.getLogger(RequestsService.class);
+    private static final Logger LOGGER = Logger.getLogger(RequestsServiceImpl.class);
 
-    public static boolean createRequest(String email, String activityDescription){
+    private static RequestsServiceImpl instance;
+
+    public static RequestsServiceImpl getInstance(){
+        if(instance == null){
+            instance = new RequestsServiceImpl();
+        }
+        return instance;
+    }
+
+    private RequestsServiceImpl(){}
+
+    @Transaction
+    @Override
+    public boolean createRequest(String email, String activityDescription) {
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
@@ -32,7 +49,8 @@ public class RequestsService {
         return false;
     }
 
-    public static List<RequestToAdd> getAllActiveAddRequests(){
+    @Override
+    public List<RequestToAdd> getAllActiveAddRequests(){
         RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
         List<RequestToAdd> requestToAdds;
         try{
@@ -44,7 +62,8 @@ public class RequestsService {
         }
     }
 
-    public static List<Pair<String, String>> outputAddRequests(){
+    @Override
+    public List<Pair<String, String>> outputAddRequests(){
         List<Pair<String,String>> result = new ArrayList<>();
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
@@ -62,7 +81,8 @@ public class RequestsService {
         return null;
     }
 
-    public static List<Pair<String, String>> outputDeleteRequests(){
+    @Override
+    public List<Pair<String, String>> outputDeleteRequests(){
         List<Pair<String,String>> result = new ArrayList<>();
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         try{
@@ -80,7 +100,8 @@ public class RequestsService {
         return null;
     }
 
-    public static List<RequestToDelete> getAllActiveDeleteRequests(){
+    @Override
+    public List<RequestToDelete> getAllActiveDeleteRequests(){
         RequestToDeleteDao requestDao = DaoFactory.createRequestToDeleteDao();
         List<RequestToDelete> requestToDeletes;
         try{
@@ -91,7 +112,8 @@ public class RequestsService {
         }
         return null;
     }
-    public static List<RequestToAdd> getUserRequestsToAdd(String email){
+
+    public List<RequestToAdd> getUserRequestsToAdd(String email){
         RequestToAddDao request = DaoFactory.createRequestToAddDao();
         UserDao userDao = DaoFactory.createUserDao();
 
@@ -106,7 +128,8 @@ public class RequestsService {
         return null;
     }
 
-    public static boolean setInactiveToRequest(String userEmail, String activityDescription){
+    @Override
+    public boolean setInactiveToRequest(String userEmail, String activityDescription){
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
@@ -121,7 +144,8 @@ public class RequestsService {
         return false;
     }
 
-    public static boolean createRequestToDelete(String email, String description){
+    @Override
+    public boolean createRequestToDelete(String email, String description){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         RequestToDeleteDao requestToDeleteDao = DaoFactory.createRequestToDeleteDao();
         UserDao userDao = DaoFactory.createUserDao();

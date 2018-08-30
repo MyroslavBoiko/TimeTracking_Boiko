@@ -1,16 +1,14 @@
 package dao.impl;
 
 import dao.interfaces.UserDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.User;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
 
-import java.io.PipedReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,8 @@ public class UserDaoImpl implements UserDao {
             + COLUMN_FIRST_NAME + ","
             + COLUMN_LAST_NAME + ") "
             + "VALUES (?,?,?,?,?)";
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private UserDaoImpl() {
     }
@@ -72,9 +72,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findByVaryingParams(String sql, Object... params) throws Exception {
         List<User> result = new ArrayList<>();
-        try (Connection connection = Datasource.getDataSource().getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
-             ResultSet resultSet = statement.executeQuery()){
+//        try (Connection connection = Datasource.getInstance().getConnection();
+//             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
+//             ResultSet resultSet = statement.executeQuery()){
+        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+            ResultSet resultSet = statement.executeQuery()){
+
             while (resultSet.next()) {
                 User user = new User();
                 user.setUserId(resultSet.getLong(1));
@@ -95,7 +99,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void insertNewUser(User user) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_USER),
                     user.getUserTypeId(),user.getEmail(),user.getPassword(),user.getFirstName(),user.getLastName())) {
             statement.executeUpdate();

@@ -58,7 +58,7 @@ public class UserTypeDaoImpl implements UserTypeDao {
     @Override
     public List<UserType> findByVaryingParams(String sql, Object... params) throws Exception {
         List<UserType> result = new ArrayList<>();
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
             ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
@@ -76,7 +76,7 @@ public class UserTypeDaoImpl implements UserTypeDao {
 
     @Override
     public void insertNewType(UserType userType) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_USERTYPE),
                     userType.getTypeName())) {
             statement.executeUpdate();

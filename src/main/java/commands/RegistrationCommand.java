@@ -3,7 +3,8 @@ package commands;
 import entities.User;
 import manager.PagesJsp;
 import org.apache.log4j.Logger;
-import services.RegistrationService;
+import services.RegistrationServiceImpl;
+import services.ServiceFactory;
 import utils.PasswordCrypt;
 
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ public class RegistrationCommand implements Command {
             LOGGER.error("Exception in RegistrationCommand");
         }
 
-        if(RegistrationService.performRegistration(user)){
+        if(ServiceFactory.getRegistrationService().performRegistration(user)){
             page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
         }else {
             page = PagesJsp.getInstance().getProperty(PagesJsp.ERROR);

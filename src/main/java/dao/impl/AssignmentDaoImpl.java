@@ -101,7 +101,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public List<Assignment> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Assignment> result = new ArrayList<>();
-        try (Connection connection = Datasource.getDataSource().getConnection();
+        try (Connection connection = Datasource.getInstance().getConnection();
              PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql),params);
              ResultSet resultSet = statement.executeQuery()){
             while (resultSet.next()) {
@@ -123,7 +123,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public void insertNewAssignment(Assignment assignment) throws Exception {
 
-        try(Connection  connection = Datasource.getDataSource().getConnection();
+        try(Connection  connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_ASSIGNMENT),
                     assignment.getActivityDescription(), assignment.getUserEmail())){
             statement.executeUpdate();
@@ -135,7 +135,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void updateAssignmentTotalTime(Long assignId, Long totalTime) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_UPDATE_ASSIGNMENT_SET_TIME),
                 totalTime, assignId)) {
             statement.executeUpdate();
@@ -147,7 +147,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void setInactive(String email, String description) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_UPDATE_SET_INACTIVE),
                     email, description)) {
             statement.executeUpdate();

@@ -6,7 +6,6 @@ import entities.RequestToDelete;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
 
-import javax.swing.text.html.HTMLDocument;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +70,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     @Override
     public List<RequestToDelete> findByVaryingParams(String sql, Object... params) throws Exception {
         List<RequestToDelete> result = new ArrayList<>();
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
             ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
@@ -91,7 +90,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
 
     @Override
     public void insertNewRequestToDelete(RequestToDelete requestToDelete) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_REQUEST_TO_DELETE),
                     requestToDelete.getAssignId(), requestToDelete.getUserId())) {
             statement.executeUpdate();

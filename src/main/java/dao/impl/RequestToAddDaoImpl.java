@@ -1,12 +1,13 @@
 package dao.impl;
 
 import dao.interfaces.RequestToAddDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.RequestToAdd;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
 
-import java.io.PipedReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,6 +38,8 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
             + COLUMN_IS_ACTIVE + " = " + false
             + " WHERE " + COLUMN_USER_ID_FK + " = ?" + " AND "
             + COLUMN_ACTIVITY_ID_FK + " = ?";
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private RequestToAddDaoImpl() {}
 
@@ -76,7 +79,7 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     @Override
     public List<RequestToAdd> findByVaryingParams(String sql, Object... params) throws Exception {
         List<RequestToAdd> result = new ArrayList<>();
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
             ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
@@ -96,9 +99,12 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
 
     @Override
     public void insertNewRequestToAdd(RequestToAdd requestToAdd) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_REQUEST_TO_ADD),
-                    requestToAdd.getActivityId(), requestToAdd.getUserId())) {
+//        try(Connection connection = Datasource.getInstance().getConnection();
+//            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_REQUEST_TO_ADD),
+//                    requestToAdd.getActivityId(), requestToAdd.getUserId())) {
+        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_REQUEST_TO_ADD),
+                    requestToAdd.getActivityId(), requestToAdd.getUserId())){
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewRequestToAdd method of RequestToDeleteDaoImpl class.");
@@ -108,7 +114,7 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
 
     @Override
     public void setInactiveRequestToAdd(Long activityId, Long userId) throws Exception {
-        try(Connection connection = Datasource.getDataSource().getConnection();
+        try(Connection connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_UPDATE_SET_INACTIVE),
                     userId, activityId)) {
             statement.executeUpdate();

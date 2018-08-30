@@ -14,10 +14,15 @@ import java.util.ResourceBundle;
 public class Datasource {
 
     private static final Logger LOGGER = Logger.getLogger(Datasource.class);
+    private static Datasource instance;
 
-    private static DataSource dataSource;
+    private DataSource dataSource;
 
-    static{
+    private Datasource(){
+        init();
+    }
+
+    private void init(){
         try{
             /**
              * Get initial context that has references to all configurations and
@@ -38,10 +43,21 @@ public class Datasource {
         }
     }
 
-    private Datasource(){}
+    public static Datasource getInstance(){
+        if(instance == null){
+            instance = new Datasource();
+        }
+        return instance;
+    }
 
-    public static DataSource getDataSource() {
+    public Connection getConnection() {
+        Connection connection = null;
         LOGGER.info("Return the object of DataSource class.");
-        return dataSource;
+        try{
+            connection = dataSource.getConnection();
+        }catch (SQLException e){
+            LOGGER.error("Exception in getting connection");
+        }
+        return connection;
     }
 }

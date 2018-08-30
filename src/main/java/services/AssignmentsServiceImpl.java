@@ -8,14 +8,28 @@ import entities.Activity;
 import entities.Assignment;
 import entities.User;
 import org.apache.log4j.Logger;
+import services.interfaces.AssignmentsService;
+import services.interfaces.Service;
 
 import java.util.List;
 
-public class AssignmentsService {
+public class AssignmentsServiceImpl implements AssignmentsService {
 
-    private static final Logger LOGGER = Logger.getLogger(AssignmentsService.class);
+    private static final Logger LOGGER = Logger.getLogger(AssignmentsServiceImpl.class);
 
-    public static List<Assignment> getActiveAssignments(){
+    private static AssignmentsServiceImpl instance;
+
+    public static AssignmentsServiceImpl getInstance(){
+        if(instance == null){
+            instance = new AssignmentsServiceImpl();
+        }
+        return instance;
+    }
+
+    private AssignmentsServiceImpl(){}
+
+    @Override
+    public List<Assignment> getActiveAssignments(){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         List<Assignment> assignments;
         try{
@@ -27,7 +41,8 @@ public class AssignmentsService {
         return null;
     }
 
-    public static boolean createAssignment(String email, String activityDescription){
+    @Override
+    public boolean createAssignment(String email, String activityDescription){
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
@@ -38,7 +53,7 @@ public class AssignmentsService {
             assignment.setUserEmail(user.getEmail());
             assignment.setActivityDescription(activity.getDescription());
             assignmentDao.insertNewAssignment(assignment);
-            RequestsService.setInactiveToRequest(email,activityDescription);
+            ServiceFactory.getRequestsService().setInactiveToRequest(email,activityDescription);
             return true;
         }catch (Exception e){
             LOGGER.error("Exception in createAssignment method.");
@@ -46,7 +61,8 @@ public class AssignmentsService {
         return false;
     }
 
-    public static List<Assignment> getUserAssignments(String email){
+    @Override
+    public List<Assignment> getUserAssignments(String email){
         List<Assignment> result;
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         try {
@@ -58,7 +74,8 @@ public class AssignmentsService {
         return null;
     }
 
-    public static boolean saveTime(String email, String description, String time){
+    @Override
+    public boolean saveTime(String email, String description, String time){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         try{
             Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(email, description, true);
@@ -73,10 +90,11 @@ public class AssignmentsService {
         return false;
     }
 
-    public static boolean setAssignInactive(String email, String descrription){
+    @Override
+    public boolean setAssignInactive(String email, String description){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         try {
-            assignmentDao.setInactive(email, descrription);
+            assignmentDao.setInactive(email, description);
             return true;
         }catch (Exception e){
             LOGGER.error("Exception in setAssignInactive method.");

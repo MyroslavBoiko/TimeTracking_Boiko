@@ -66,7 +66,7 @@ public class LanguageDaoImpl implements LanguageDao {
     @Override
     public List<Language> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Language> result = new ArrayList<>();
-        try(Connection  connection = Datasource.getDataSource().getConnection();
+        try(Connection  connection = Datasource.getInstance().getConnection();
             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
             ResultSet resultSet = statement.executeQuery()){
             while(resultSet.next()){
@@ -85,7 +85,7 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public void insertNewLanguage(Language language) throws Exception {
-        try (Connection connection = Datasource.getDataSource().getConnection();
+        try (Connection connection = Datasource.getInstance().getConnection();
              PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_LANGUAGE),
                      language.getLanguageName(),language.getLanguageCode())){
             statement.executeUpdate();

@@ -3,7 +3,9 @@ package commands.sidebar.client;
 import commands.Command;
 import entities.User;
 import manager.PagesJsp;
-import services.RequestsService;
+import services.RequestsServiceImpl;
+import services.ServiceFactory;
+import services.interfaces.RequestsService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,9 @@ public class CreateRequestCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
-        RequestsService.createRequest(email,request.getParameter("description"));
+        RequestsService service = ServiceFactory.getRequestsService();
+        service.createRequest(email,request.getParameter("description"));
+//        RequestsServiceImpl.createRequest(email,request.getParameter("description"));
         return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
     }
 }
