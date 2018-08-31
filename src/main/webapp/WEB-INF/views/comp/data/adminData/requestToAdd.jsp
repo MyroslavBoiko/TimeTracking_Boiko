@@ -10,7 +10,6 @@
     <form action="controller" method="get">
         <select name="request" style="width:auto;" size="5">
             <option disabled>Add requests</option>
-
             <c:forEach items="${requestScope.requestsToAdd}" var="requestToAdd">
                 <option>
                     <c:out value="${requestToAdd.key}"/>
@@ -18,10 +17,12 @@
                 </option>
             </c:forEach>
         </select>
+        <input type="hidden" name="command" value="createAssign">
+        <input type="submit" value="Create assign">
+        <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showActiveRequestsToAdd&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
-        <input type="hidden" name="command" value="createAssign">
-        <input type="submit" value="Create assign">
+
     </form>
 </div>

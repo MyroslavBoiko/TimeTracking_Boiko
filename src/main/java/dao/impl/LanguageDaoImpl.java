@@ -77,9 +77,14 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public int getNumberOfRows() throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberOfRowsByParams(String sql, Object... params) throws Exception {
         int numOfRows = 0;
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 numOfRows = resultSet.getInt(1);

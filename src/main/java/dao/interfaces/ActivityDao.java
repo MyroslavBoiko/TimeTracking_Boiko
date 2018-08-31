@@ -17,6 +17,8 @@ public interface ActivityDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewActivity(Activity activity) throws Exception;
 
 }

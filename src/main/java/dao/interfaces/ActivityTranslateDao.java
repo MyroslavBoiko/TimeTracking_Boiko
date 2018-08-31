@@ -19,6 +19,8 @@ public interface ActivityTranslateDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewActivityTranslate(ActivityTranslate activityTranslate) throws Exception;
 
 }

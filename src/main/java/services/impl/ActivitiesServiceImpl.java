@@ -34,7 +34,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         return null;
     }
     @Override
-    public List<Activity> getUsersPerPage(int currentPage, int recordsPerPage){
+    public List<Activity> getActivitiesPerPage(int currentPage, int recordsPerPage){
         ActivityDao activityDao = DaoFactory.createActivityDao();
         try{
             return activityDao.findActivitiesByLimit(currentPage, recordsPerPage);
@@ -43,6 +43,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         }
         return null;
     }
+
     @Override
     public int getCountOfRows() {
         ActivityDao activityDao = DaoFactory.createActivityDao();

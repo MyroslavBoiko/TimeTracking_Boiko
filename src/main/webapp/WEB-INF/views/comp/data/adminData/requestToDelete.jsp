@@ -18,10 +18,12 @@
                 </option>
             </c:forEach>
         </select>
+        <input type="hidden" name="command" value="deleteAssign">
+        <input type="submit" value="Delete assign">
+        <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showActiveRequestsToDelete&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
-        <input type="hidden" name="command" value="deleteAssign">
-        <input type="submit" value="Delete assign">
+
     </form>
 </div>

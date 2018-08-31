@@ -60,7 +60,53 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Override
     public int getCountOfRowsRequestToDelete() {
+        RequestToDeleteDao requestToDelete = DaoFactory.createRequestToDeleteDao();
+        try{
+            return requestToDelete.getNumberOfRows();
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
         return 0;
+    }
+
+    @Override
+    public List<Pair<String,String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage){
+        List<Pair<String,String>> result = new ArrayList<>();
+        UserDao userDao = DaoFactory.createUserDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
+        try{
+            List<RequestToAdd> requestsToAdd = requestDao.findRequestsToAddByLimit(currentPage, recordsPerPage);
+            for(RequestToAdd request : requestsToAdd){
+                User user = userDao.findWhereUserIdEquals(request.getUserId());
+                Activity activity = activityDao.findWhereActivityIdEquals(request.getActivityId());
+                result.add(new Pair<>(user.getEmail(), activity.getDescription()));
+            }
+            return result;
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return null;
+    }
+
+    @Override
+    public List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage) {
+        List<Pair<String,String>> result = new ArrayList<>();
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        RequestToDeleteDao requestDao = DaoFactory.createRequestToDeleteDao();
+        try{
+            List<RequestToDelete> requestsToDelete = requestDao.findRequestsToDeleteByLimit(currentPage, recordsPerPage);
+            for(RequestToDelete request : requestsToDelete){
+                Assignment assignment = assignmentDao.findWhereAssignIdAndIsActiveEquals(request.getAssignId(), true);
+                if(assignment != null){
+                    result.add(new Pair<>(assignment.getUserEmail(), assignment.getActivityDescription()));
+                }
+            }
+            return result;
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return null;
     }
 
     @Override

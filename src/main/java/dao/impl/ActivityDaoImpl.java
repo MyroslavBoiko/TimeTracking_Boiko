@@ -24,7 +24,6 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String COLUMN_ACTIVITY_DESCRIPTION = "description";
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_ACTIVITY;
-
     private static final String SQL_INSERT_ACTIVITY = "INSERT INTO " + TABLE_ACTIVITY
             + " (" + COLUMN_ACTIVITY_DESCRIPTION + ") "
             + "VALUES (?)";
@@ -33,14 +32,15 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String SQL_SELECT_BY_DESCRIPTION = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_DESCRIPTION + " = ?";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_ACTIVITY;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ACTIVITY;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private ActivityDaoImpl() {}
+    private ActivityDaoImpl() {
+    }
 
-    public static ActivityDaoImpl getInstance(){
-        if(instance == null){
+    public static ActivityDaoImpl getInstance() {
+        if (instance == null) {
             instance = new ActivityDaoImpl();
         }
         return instance;
@@ -53,7 +53,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public Activity findWhereActivityIdEquals(Long activityId) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT_BY_ACTIVITY_ID, activityId));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_BY_ACTIVITY_ID, activityId));
 
     }
 
@@ -70,9 +70,14 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public int getNumberOfRows() throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberOfRowsByParams(String sql, Object... params) throws Exception {
         int numOfRows = 0;
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 numOfRows = resultSet.getInt(1);
@@ -90,7 +95,7 @@ public class ActivityDaoImpl implements ActivityDao {
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
              PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Activity activity = new Activity();
 
                 activity.setActivityId(resultSet.getLong(COLUMN_ACTIVITY_ID_PK));
@@ -98,7 +103,7 @@ public class ActivityDaoImpl implements ActivityDao {
                 result.add(activity);
             }
             return result;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("Exception in findByVaryingParams method of ActivityDaoImpl class.");
             throw new SQLException();
         }
@@ -117,7 +122,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     private Activity fetchSingleResult(List<Activity> activities) {
-        if(activities.size() > 0){
+        if (activities.size() > 0) {
             return activities.remove(0);
         }
         return null;

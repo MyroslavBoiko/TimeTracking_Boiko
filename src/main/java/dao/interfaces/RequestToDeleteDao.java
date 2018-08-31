@@ -21,6 +21,8 @@ public interface RequestToDeleteDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewRequestToDelete(RequestToDelete requestToDelete) throws Exception;
 
 }

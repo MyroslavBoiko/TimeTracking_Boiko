@@ -33,7 +33,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
             + COLUMN_USER_ID_FK + ") "
             + "VALUES (?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM" + TABLE_REQUEST_TO_DELETE;
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
@@ -81,9 +81,14 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
 
     @Override
     public int getNumberOfRows() throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberOfRowsByParams(String sql, Object... params) throws Exception {
         int numOfRows = 0;
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 numOfRows = resultSet.getInt(1);

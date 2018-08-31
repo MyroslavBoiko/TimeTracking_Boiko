@@ -7,6 +7,6 @@ import java.util.List;
 public interface ActivitiesService extends Service {
 
     List<Activity> getAllActivities();
-    List<Activity> getUsersPerPage(int currentPage, int recordsPerPage);
+    List<Activity> getActivitiesPerPage(int currentPage, int recordsPerPage);
     int getCountOfRows();
 }

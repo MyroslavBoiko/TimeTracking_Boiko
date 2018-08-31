@@ -16,7 +16,7 @@ import java.io.IOException;
 public class LoginCommand implements Command{
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
+        String page;
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         LoginService service = ServiceFactory.getLoginService();

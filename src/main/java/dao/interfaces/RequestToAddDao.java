@@ -23,6 +23,8 @@ public interface RequestToAddDao {
 
     void setInactiveRequestToAdd(Long activityId, Long userId) throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewRequestToAdd(RequestToAdd requestToAdd) throws Exception;
 
 }

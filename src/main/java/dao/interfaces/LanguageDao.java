@@ -19,6 +19,8 @@ public interface LanguageDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewLanguage(Language language) throws Exception;
 
 }

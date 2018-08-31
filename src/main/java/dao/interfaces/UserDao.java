@@ -25,6 +25,8 @@ public interface UserDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewUser(User user) throws Exception;
 
 }

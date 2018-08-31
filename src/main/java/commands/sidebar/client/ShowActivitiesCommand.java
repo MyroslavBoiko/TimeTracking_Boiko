@@ -24,7 +24,7 @@ public class ShowActivitiesCommand implements Command {
         if(pageParameter != null){
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        List<Activity> activities = service.getUsersPerPage(paginator.getCurrentPage(), recordsPerPage);
+        List<Activity> activities = service.getActivitiesPerPage(paginator.getCurrentPage(), recordsPerPage);
         request.setAttribute("activities", activities);
         request.setAttribute("pagesCount", paginator.getPagesCount());
         return PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);

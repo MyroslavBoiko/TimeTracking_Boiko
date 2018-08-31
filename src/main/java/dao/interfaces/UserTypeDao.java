@@ -17,5 +17,7 @@ public interface UserTypeDao {
 
     int getNumberOfRows() throws Exception;
 
+    int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
     void insertNewType(UserType userType) throws Exception;
 }

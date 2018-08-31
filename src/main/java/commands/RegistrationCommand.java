@@ -17,10 +17,8 @@ public class RegistrationCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
-
+        String page;
         User user = new User();
-
         try {
             user.setEmail(request.getParameter("email"));
             user.setPassword(PasswordCrypt.encryptPassword(request.getParameter("password")));
