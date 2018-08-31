@@ -17,12 +17,15 @@
                 </option>
             </c:forEach>
         </select>
-        <input type="hidden" name="command" value="createAssign">
-        <input type="submit" value="Create assign">
         <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showActiveRequestsToAdd&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
+        <br>
+        <input type="hidden" name="command" value="createAssign">
+        <input type="submit" value="Create assign">
+
+
 
     </form>
 </div>

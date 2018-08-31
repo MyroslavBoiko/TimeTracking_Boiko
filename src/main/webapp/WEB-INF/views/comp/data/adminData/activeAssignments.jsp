@@ -18,12 +18,15 @@
                 </option>
             </c:forEach>
         </select>
-        <input type="hidden" name="command" value="adminPage">
-        <input type="submit" value="Return">
         <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showActiveAssignments&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
+        <br>
+        <input type="hidden" name="command" value="adminPage">
+        <input type="submit" value="Return">
+
+
 
     </form>
 </div>
