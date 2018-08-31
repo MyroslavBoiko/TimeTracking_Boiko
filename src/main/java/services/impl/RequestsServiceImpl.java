@@ -1,4 +1,4 @@
-package services;
+package services.impl;
 
 import annotation.Transaction;
 import dao.DaoFactory;
@@ -7,9 +7,7 @@ import entities.*;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
 import services.interfaces.RequestsService;
-import services.interfaces.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +45,22 @@ public class RequestsServiceImpl implements RequestsService {
             LOGGER.error("Exception in createRequest method.");
         }
         return false;
+    }
+
+    @Override
+    public int getCountOfRowsRequestToAdd() {
+        RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
+        try{
+            return requestToAddDao.getNumberOfRows();
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCountOfRowsRequestToDelete() {
+        return 0;
     }
 
     @Override

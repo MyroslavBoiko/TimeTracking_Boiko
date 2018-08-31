@@ -1,43 +1,26 @@
 package commands.utils;
 
-import java.util.List;
-
-public class Paginator<T> {
-    private List<T> items;
+public class Paginator {
 
     private int pagesCount;
     private int currentPage;
     private int itemsPerPage;
+    private int numberOfRows;
 
-    public Paginator(List<T> items, int itemsPerPage) {
-        this.items = items;
+    public Paginator(int numberOfRows, int itemsPerPage) {
         this.itemsPerPage = itemsPerPage;
+        this.numberOfRows = numberOfRows;
         pagesCount = calculatePagesCount();
         currentPage = 1;
     }
 
     private int calculatePagesCount() {
-        int itemsCount = items.size();
-        int pagesCount = itemsCount / itemsPerPage;
-        if(pagesCount == 0){
-             return pagesCount = 1;
+        int pagesCount = numberOfRows / itemsPerPage;
+        if (pagesCount % itemsPerPage > 0) {
+            pagesCount++;
         }
-        return isNecessaryIncompletePage(itemsCount, pagesCount) ? pagesCount + 1 : pagesCount;
+        return pagesCount;
     }
-
-    private boolean isNecessaryIncompletePage(int itemsCount, int pagesCount) {
-        return itemsCount % pagesCount == 0;
-    }
-
-    public List<T> getItemsForCurrentPage() {
-        int startIndex = (currentPage - 1) * itemsPerPage;
-        int endIndex = startIndex + itemsPerPage;
-        if (endIndex > items.size()) {
-            endIndex = items.size();
-        }
-        return items.subList(startIndex, endIndex);
-    }
-
 
     public int getPagesCount() {
         return pagesCount;
@@ -45,5 +28,9 @@ public class Paginator<T> {
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
     }
 }

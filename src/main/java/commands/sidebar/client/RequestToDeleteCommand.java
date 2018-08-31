@@ -3,7 +3,6 @@ package commands.sidebar.client;
 import commands.Command;
 import entities.User;
 import manager.PagesJsp;
-import services.RequestsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.RequestsService;
 

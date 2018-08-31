@@ -2,6 +2,7 @@ package services.interfaces;
 
 import entities.RequestToAdd;
 import entities.RequestToDelete;
+import entities.User;
 import javafx.util.Pair;
 
 import java.sql.SQLException;
@@ -15,4 +16,6 @@ public interface RequestsService extends Service {
     List<RequestToDelete> getAllActiveDeleteRequests();
     boolean setInactiveToRequest(String userEmail, String activityDescription);
     boolean createRequestToDelete(String email, String description);
+    int getCountOfRowsRequestToAdd();
+    int getCountOfRowsRequestToDelete();
 }

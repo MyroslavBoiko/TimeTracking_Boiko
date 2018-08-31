@@ -3,7 +3,6 @@ package commands.sidebar.client;
 import commands.Command;
 import entities.User;
 import manager.PagesJsp;
-import services.RequestsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.RequestsService;
 
@@ -18,7 +17,6 @@ public class CreateRequestCommand implements Command {
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
         RequestsService service = ServiceFactory.getRequestsService();
         service.createRequest(email,request.getParameter("description"));
-//        RequestsServiceImpl.createRequest(email,request.getParameter("description"));
         return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
     }
 }

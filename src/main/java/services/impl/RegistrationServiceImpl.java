@@ -1,4 +1,4 @@
-package services;
+package services.impl;
 
 import dao.DaoFactory;
 import dao.interfaces.UserDao;
@@ -6,7 +6,6 @@ import dao.interfaces.UserTypeDao;
 import entities.User;
 import org.apache.log4j.Logger;
 import services.interfaces.RegistrationService;
-import services.interfaces.Service;
 
 public class RegistrationServiceImpl implements RegistrationService {
 

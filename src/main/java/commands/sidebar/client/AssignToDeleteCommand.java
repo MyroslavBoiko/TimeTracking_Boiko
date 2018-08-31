@@ -5,7 +5,6 @@ import commands.utils.Paginator;
 import entities.Assignment;
 import entities.User;
 import manager.PagesJsp;
-import services.AssignmentsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
 
@@ -21,13 +20,13 @@ public class AssignToDeleteCommand implements Command {
         AssignmentsService service = ServiceFactory.getAssignmentsService();
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
         List<Assignment> assignments = service.getUserAssignments(email);
-        Paginator<Assignment> paginator = new Paginator<>(assignments, 4);
-        String pageParameter = request.getParameter("page");
-        if (pageParameter != null) {
-            paginator.setCurrentPage(Integer.parseInt(pageParameter));
-        }
-        request.setAttribute("userAssignments", paginator.getItemsForCurrentPage());
-        request.setAttribute("pagesCount", paginator.getPagesCount());
+//        Paginator<Assignment> paginator = new Paginator<>(assignments, 4);
+//        String pageParameter = request.getParameter("page");
+//        if (pageParameter != null) {
+//            paginator.setCurrentPage(Integer.parseInt(pageParameter));
+//        }
+//        request.setAttribute("userAssignments", paginator.getItemsForCurrentPage());
+//        request.setAttribute("pagesCount", paginator.getPagesCount());
         return PagesJsp.getInstance().getProperty(PagesJsp.USER_ASSIGNMENTS);
     }
 }

@@ -2,10 +2,8 @@ package commands.sidebar.admin;
 
 import commands.Command;
 import manager.PagesJsp;
-import services.AssignmentsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
-import services.interfaces.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

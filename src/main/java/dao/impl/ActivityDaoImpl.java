@@ -2,13 +2,11 @@ package dao.impl;
 
 import dao.interfaces.ActivityDao;
 import datasource.ConnectionHolder;
-import datasource.Datasource;
 import datasource.TransactionManager;
 import entities.Activity;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +32,8 @@ public class ActivityDaoImpl implements ActivityDao {
             + " WHERE " + COLUMN_ACTIVITY_ID_PK + " = ?";
     private static final String SQL_SELECT_BY_DESCRIPTION = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_DESCRIPTION + " = ?";
+    private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_ACTIVITY;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
@@ -63,14 +63,33 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    public List<Activity> findActivitiesByLimit(int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public int getNumberOfRows() throws Exception {
+        int numOfRows = 0;
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                numOfRows = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception in getNumberOfRows method of ActivityDaoImpl class.");
+            throw new SQLException();
+        }
+        return numOfRows;
+    }
+
+    @Override
     public List<Activity> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Activity> result = new ArrayList<>();
-//        try(Connection connection = Datasource.getInstance().getConnection();
-//            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql),params);
-//            ResultSet resultSet = statement.executeQuery()){
-        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
-            ResultSet resultSet = statement.executeQuery()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
             while(resultSet.next()){
                 Activity activity = new Activity();
 
@@ -87,9 +106,9 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     public void insertNewActivity(Activity activity) throws Exception {
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_ACTIVITY),
-                    activity.getDescription())) {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_ACTIVITY),
+                     activity.getDescription())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewActivity method of ActivityDaoImpl class.");

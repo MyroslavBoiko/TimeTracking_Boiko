@@ -12,10 +12,19 @@ import java.util.List;
 
 public interface UserDao {
     List<User> findAll() throws Exception;
+
     User findWhereUserIdEquals(Long userId) throws Exception;
+
     User findWhereEmailEquals(String email) throws Exception;
+
     List<User> findWhereUserTypeIdEquals(Long userTypeId) throws Exception;
+
     List<User> findByVaryingParams(String sql, Object... params) throws Exception;
-    void insertNewUser(User user)throws Exception;
+
+    List<User> findUsersByLimit(int currentPage, int recordsPerPage) throws Exception;
+
+    int getNumberOfRows() throws Exception;
+
+    void insertNewUser(User user) throws Exception;
 
 }

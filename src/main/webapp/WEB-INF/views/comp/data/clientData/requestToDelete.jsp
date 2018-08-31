@@ -8,7 +8,7 @@
 --%>
 <div>
     <form action="controller" method="get">
-        <select name="request" style="width:auto;" multiple size="5">
+        <select name="request" style="width:auto;" size="5">
             <option disabled>Delete requests</option>
 
             <c:forEach items="${requestScope.userAssignments}" var="requestToDelete">

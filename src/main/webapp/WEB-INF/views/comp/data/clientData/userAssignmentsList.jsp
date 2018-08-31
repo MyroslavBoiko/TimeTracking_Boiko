@@ -9,7 +9,7 @@
 
 <div>
     <form action="controller" method="get">
-        <select name="assignment" style="width:auto;" multiple size="5">
+        <select name="assignment" style="width:auto;" size="5">
             <option disabled>Assignments</option>
 
             <c:forEach items="${requestScope.userAssignments}" var="assignment">

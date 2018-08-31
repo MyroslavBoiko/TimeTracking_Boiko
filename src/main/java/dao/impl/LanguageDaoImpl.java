@@ -1,7 +1,9 @@
 package dao.impl;
 
 import dao.interfaces.LanguageDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.Language;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
@@ -24,12 +26,16 @@ public class LanguageDaoImpl implements LanguageDao {
     private static final String COLUMN_LANGUAGE_NAME = "language_name";
     private static final String COLUMN_LANGUAGE_CODE = "language_code";
 
-    private final String SQL_SELECT = "SELECT * FROM " + TABLE_LANGUAGE;
+    private static final String SQL_SELECT = "SELECT * FROM " + TABLE_LANGUAGE;
 
     private static final String SQL_INSERT_LANGUAGE = "INSERT INTO " + TABLE_LANGUAGE
             + " (" + COLUMN_LANGUAGE_NAME + ","
             + COLUMN_LANGUAGE_CODE + ") "
             + "VALUES (?,?)";
+    private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM" + TABLE_LANGUAGE;
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private LanguageDaoImpl(){}
 
@@ -64,19 +70,41 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
+    public List<Language> findLanguagesByLimit(int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public int getNumberOfRows() throws Exception {
+        int numOfRows = 0;
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                numOfRows = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception in getNumberOfRows method of LanguageDaoDaoImpl class.");
+            throw new SQLException();
+        }
+        return numOfRows;
+    }
+
+    @Override
     public List<Language> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Language> result = new ArrayList<>();
-        try(Connection  connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
-            ResultSet resultSet = statement.executeQuery()){
-            while(resultSet.next()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
                 Language language = new Language();
                 language.setLanguageId(resultSet.getLong(COLUMN_LANGUAGE_ID_PK));
                 language.setLanguageName(resultSet.getString(COLUMN_LANGUAGE_NAME));
                 language.setLanguageCode(resultSet.getString(COLUMN_LANGUAGE_CODE));
                 result.add(language);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("Exception in findByVaryingParams method of LanguageDaoImpl class.");
             throw new SQLException();
         }
@@ -85,9 +113,9 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public void insertNewLanguage(Language language) throws Exception {
-        try (Connection connection = Datasource.getInstance().getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_LANGUAGE),
-                     language.getLanguageName(),language.getLanguageCode())){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_LANGUAGE),
+                     language.getLanguageName(), language.getLanguageCode())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewLanguage method of LanguageDaoImpl class.");

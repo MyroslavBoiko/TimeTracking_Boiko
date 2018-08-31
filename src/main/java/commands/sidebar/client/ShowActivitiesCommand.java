@@ -4,7 +4,6 @@ import commands.Command;
 import commands.utils.Paginator;
 import entities.Activity;
 import manager.PagesJsp;
-import services.ActivitiesServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.ActivitiesService;
 
@@ -17,15 +16,16 @@ import java.util.List;
 public class ShowActivitiesCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Activity> activities;
+
+        final int recordsPerPage = 5;
         ActivitiesService service = ServiceFactory.getActivitiesService();
-        activities = service.getAllActivities();
-        Paginator<Activity> paginator = new Paginator<>(activities, 4);
+        Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
         String pageParameter = request.getParameter("page");
-        if (pageParameter != null) {
-            paginator.setCurrentPage(Integer.parseInt(pageParameter));
+        if(pageParameter != null){
+            paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        request.setAttribute("activities", paginator.getItemsForCurrentPage());
+        List<Activity> activities = service.getUsersPerPage(paginator.getCurrentPage(), recordsPerPage);
+        request.setAttribute("activities", activities);
         request.setAttribute("pagesCount", paginator.getPagesCount());
         return PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
     }

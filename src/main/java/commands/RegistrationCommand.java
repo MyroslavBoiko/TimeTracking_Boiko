@@ -3,7 +3,6 @@ package commands;
 import entities.User;
 import manager.PagesJsp;
 import org.apache.log4j.Logger;
-import services.RegistrationServiceImpl;
 import services.ServiceFactory;
 import utils.PasswordCrypt;
 

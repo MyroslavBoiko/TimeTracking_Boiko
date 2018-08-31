@@ -1,7 +1,9 @@
 package dao.impl;
 
 import dao.interfaces.ActivityTranslateDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.ActivityTranslate;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
@@ -38,6 +40,10 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
             + " WHERE " + COLUMN_LANGUAGE_ID_FK + " = ?";
     private static final String SQL_SELECT_BY_ACTIVITY_ID = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?";
+    private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM" + TABLE_ACTIVITY_TRANSLATE;
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private ActivityTranslateDaoImpl() {}
 
@@ -69,11 +75,33 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
     }
 
     @Override
+    public List<ActivityTranslate> findActivityTranslatesByLimit(int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public int getNumberOfRows() throws Exception {
+        int numOfRows = 0;
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_SELECT_COUNT));
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                numOfRows = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception in getNumberOfRows method of ActivityTranslateDaoImpl class.");
+            throw new SQLException();
+        }
+        return numOfRows;
+    }
+
+    @Override
     public List<ActivityTranslate> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<ActivityTranslate> result = new ArrayList<>();
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
-            ResultSet resultSet = statement.executeQuery()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
             while(resultSet.next()){
                 ActivityTranslate activityTranslate = new ActivityTranslate();
                 activityTranslate.setTranslateId(resultSet.getLong(COLUMN_TRANSLATE_ID_PK));
@@ -91,9 +119,9 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
 
     @Override
     public void insertNewActivityTranslate(ActivityTranslate activityTranslate) throws Exception {
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_TRANSLATE),
-                    activityTranslate.getActivityId(), activityTranslate.getActivityId(), activityTranslate.getDescription())){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_TRANSLATE),
+                     activityTranslate.getActivityId(), activityTranslate.getActivityId(), activityTranslate.getDescription())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewActivityTranslate method of ActivityTranslateDaoImpl class.");

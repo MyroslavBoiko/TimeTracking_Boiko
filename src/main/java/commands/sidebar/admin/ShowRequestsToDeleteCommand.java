@@ -2,11 +2,12 @@ package commands.sidebar.admin;
 
 import commands.Command;
 import commands.utils.Paginator;
+import entities.User;
 import javafx.util.Pair;
 import manager.PagesJsp;
-import services.RequestsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.RequestsService;
+import services.interfaces.UsersService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,15 +18,16 @@ import java.util.List;
 public class ShowRequestsToDeleteCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestsService service = ServiceFactory.getRequestsService();
-        List<Pair<String,String>> deleteRequests = service.outputDeleteRequests();
-        Paginator<Pair<String,String>> paginator = new Paginator<>(deleteRequests, 4);
-        String pageParameter = request.getParameter("page");
-        if (pageParameter != null) {
-            paginator.setCurrentPage(Integer.parseInt(pageParameter));
-        }
-        request.setAttribute("requestsToDelete", paginator.getItemsForCurrentPage());
-        request.setAttribute("pagesCount", paginator.getPagesCount());
+//        final int recordsPerPage = 5;
+//        RequestsService service = ServiceFactory.getRequestsService();
+//        Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
+//        String pageParameter = request.getParameter("page");
+//        if(pageParameter != null){
+//            paginator.setCurrentPage(Integer.valueOf(pageParameter));
+//        }
+//        List<User> users = service.getUsersPerPage(paginator.getCurrentPage(), recordsPerPage);
+//        request.setAttribute("users", users);
+//        request.setAttribute("pagesCount", paginator.getPagesCount());
         return PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_DELETE);
     }
 }
