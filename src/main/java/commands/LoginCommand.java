@@ -3,8 +3,8 @@ package commands;
 import commands.utils.CommandUtils;
 import entities.User;
 import entities.UserType;
+import manager.Message;
 import manager.PagesJsp;
-import services.LoginServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.LoginService;
 import utils.PasswordCrypt;
@@ -17,13 +17,14 @@ import java.io.IOException;
 public class LoginCommand implements Command{
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
+        String page;
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         LoginService service = ServiceFactory.getLoginService();
         User user = service.getUser(email);
         UserType userType = service.getUserType(email);
         if (user == null) {
+            request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
             page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
         }else{
             if (user.getPassword().equals(PasswordCrypt.encryptPassword(password))) {
@@ -37,9 +38,11 @@ public class LoginCommand implements Command{
                     page = PagesJsp.getInstance().getProperty(PagesJsp.ERROR);
                 }
             }else {
+                request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
                 page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
             }
         }
+        request.setAttribute("currentPage", page);
         return page;
     }
 }

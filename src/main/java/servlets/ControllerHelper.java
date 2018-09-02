@@ -44,7 +44,7 @@ public class ControllerHelper {
 
         commands.put("setTime", new SetTimeCommand());
         commands.put("saveTime", new SaveTimeCommand());
-        commands.put("locale", new Locale());
+        commands.put("locale", new LocaleCommand());
 
     }
 

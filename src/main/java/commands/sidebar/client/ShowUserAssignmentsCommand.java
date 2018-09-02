@@ -5,7 +5,6 @@ import commands.utils.Paginator;
 import entities.Assignment;
 import entities.User;
 import manager.PagesJsp;
-import services.AssignmentsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
 
@@ -19,16 +18,18 @@ public class ShowUserAssignmentsCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final int recordsPerPage = 5;
         String page;
         String email = ((User)request.getSession().getAttribute("user")).getEmail();
         AssignmentsService service = ServiceFactory.getAssignmentsService();
-        List<Assignment> assignments = service.getUserAssignments(email);
-        Paginator<Assignment> paginator = new Paginator<>(assignments, 4);
+        Paginator paginator = new Paginator(service.getCountForUser(email, true), recordsPerPage);
         String pageParameter = request.getParameter("page");
-        if (pageParameter != null) {
-            paginator.setCurrentPage(Integer.parseInt(pageParameter));
+        if(pageParameter != null){
+            paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        request.setAttribute("userAssignments", paginator.getItemsForCurrentPage());
+        List<Assignment> assignments = service.getUserAssignmentsPerPage(email, true,
+                paginator.getCurrentPage(), recordsPerPage);
+        request.setAttribute("userAssignments", assignments);
         request.setAttribute("pagesCount", paginator.getPagesCount());
         String choose = request.getParameter("choose");
         if(choose == null){
@@ -36,7 +37,7 @@ public class ShowUserAssignmentsCommand implements Command {
         }else{
             page = PagesJsp.getInstance().getProperty(PagesJsp.ASSIGNMENTS_TO_DELETE);
         }
+        request.setAttribute("currentPage", page);
         return page;
-
     }
 }

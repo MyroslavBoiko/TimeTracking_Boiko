@@ -9,7 +9,7 @@
 
 <div>
     <form action="controller" method="get">
-        <select name="assignment" style="width:auto;" multiple size="5">
+        <select name="assignment" style="width:auto;" size="5">
             <option disabled>Assignments</option>
 
             <c:forEach items="${requestScope.userAssignments}" var="assignment">
@@ -19,11 +19,14 @@
                 </option>
             </c:forEach>
         </select>
+        <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showUserAssignments&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
         <br>
         <input type="hidden" name="command" value="setTime">
         <input type="submit" value="Set Time"/>
+
+
     </form>
 </div>

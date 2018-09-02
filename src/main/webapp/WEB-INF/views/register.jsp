@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: Mirosha
@@ -5,49 +6,33 @@
   Time: 12:15
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="../../css/register.css" type="text/css">
+        <title>Sign up</title>
+        <link rel="stylesheet" href="../../css/login.css" type="text/css">
     </head>
     <body>
-        <div class="login-wrap flex">
-             <div class="login-html">
-                 <label class="tab">Sign Up</label>
-                    <div class=login-form flex>
-                         <div class="sign-up-htm">
-                             <form action="controller" method="post">
-                                 <div class="group">
-                                     <label for="email" class="label">Email</label>
-                                     <input id="email" type="email" name="email" class="input" required>
-                                </div>
-                                 <div class="group">
-                                      <label for="pass" class="label">Password</label>
-                                        <input id="pass" type="password" name="password" class="input" data-type="password" required>
-                                 </div>
-                                  <%--<div class="group">--%>
-                                      <%--<label for="repass" class="label">Repeat--%>
-                                         <%--Password</label>--%>
-                                         <%--<input id="repass" type="password" class="input" data-type="password" required>--%>
-                                  <%--</div>--%>
-                                    <div class="group">
-                                        <label for="first_name" class="label">First name</label>
-                                        <input id="first_name" type="text" name="first_name" class="input" required>
-                                    </div>
-                                    <div class="group">
-                                        <label for="last_name" class="label">Last name</label>
-                                        <input id="last_name" type="text" name="last_name" class="input" required>
-                                    </div>
-                                     <div class="group">
-                                        <input type="hidden" name="command" value="registration">
-                                        <input type="submit" class="button" value="Sign Up">
-                                     </div>
-                             </form>
-                         </div>
-                    </div>
-             </div>
-        </div>
+    <div class="loginbox">
+        <h1><fmt:message key="createAcc" bundle="${locale}"/></h1>
+        <form>
+            <p><fmt:message key="email" bundle="${locale}"/></p>
+            <input type="text" name="email" placeholder="<fmt:message key="enterEmail" bundle="${locale}"/>" required>
+            <label class="error">${emailError}</label>
+            <p><fmt:message key="password" bundle="${locale}"/></p>
+            <input type="password" name="password" placeholder="<fmt:message key="enterPassword" bundle="${locale}"/>" required>
+            <label class="error">${passwordError}</label>
+            <p><fmt:message key="firstName" bundle="${locale}"/></p>
+            <input type="text" name=first_name"" placeholder="<fmt:message key="enterFirstName" bundle="${locale}"/>" required>
+            <label class="error">${firstNameError}</label>
+            <p><fmt:message key="lastName" bundle="${locale}"/></p>
+            <input type="text" name="last_name" placeholder="<fmt:message key="enterLastName" bundle="${locale}"/>" required>
+            <label class="error">${lastNameError}</label>
+            <input type="submit" value="<fmt:message key="signUp" bundle="${locale}"/>">
+            <input type="hidden" name="command" value="registration">
+            <a href="controller?command=loginPage"><fmt:message key="haveAcc" bundle="${locale}"/></a>
+        </form>
+    </div>
     </body>
 </html>
 

@@ -1,7 +1,9 @@
 package dao.impl;
 
 import dao.interfaces.RequestToDeleteDao;
+import datasource.ConnectionHolder;
 import datasource.Datasource;
+import datasource.TransactionManager;
 import entities.RequestToDelete;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
@@ -30,6 +32,10 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
             + " (" + COLUMN_ASSIGN_ID_FK + ","
             + COLUMN_USER_ID_FK + ") "
             + "VALUES (?,?)";
+    private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private RequestToDeleteDaoImpl() {}
 
@@ -68,12 +74,40 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     }
 
     @Override
+    public List<RequestToDelete> findRequestsToDeleteByLimit(int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public int getNumberOfRows() throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberOfRowsByParams(String sql, Object... params) throws Exception {
+        int numOfRows = 0;
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                numOfRows = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception in getNumberOfRows method of RequestToDeleteDaoImpl class.");
+            throw new SQLException();
+        }
+        return numOfRows;
+    }
+
+    @Override
     public List<RequestToDelete> findByVaryingParams(String sql, Object... params) throws Exception {
         List<RequestToDelete> result = new ArrayList<>();
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql), params);
-            ResultSet resultSet = statement.executeQuery()){
-            while(resultSet.next()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
                 RequestToDelete requestToDelete = new RequestToDelete();
                 requestToDelete.setDeleteId(resultSet.getLong(COLUMN_DELETE_ID_PK));
                 requestToDelete.setAssignId(resultSet.getLong(COLUMN_ASSIGN_ID_FK));
@@ -81,7 +115,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
                 requestToDelete.setIsActive(resultSet.getBoolean(COLUMN_IS_ACTIVE));
                 result.add(requestToDelete);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.");
             throw new SQLException();
         }
@@ -90,9 +124,9 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
 
     @Override
     public void insertNewRequestToDelete(RequestToDelete requestToDelete) throws Exception {
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_REQUEST_TO_DELETE),
-                    requestToDelete.getAssignId(), requestToDelete.getUserId())) {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_REQUEST_TO_DELETE),
+                     requestToDelete.getAssignId(), requestToDelete.getUserId())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewRequestToDelete method of RequestToDeleteDaoImpl class.");

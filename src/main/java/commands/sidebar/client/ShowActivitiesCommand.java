@@ -4,7 +4,6 @@ import commands.Command;
 import commands.utils.Paginator;
 import entities.Activity;
 import manager.PagesJsp;
-import services.ActivitiesServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.ActivitiesService;
 
@@ -17,16 +16,19 @@ import java.util.List;
 public class ShowActivitiesCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Activity> activities;
+        String page;
+        final int recordsPerPage = 5;
         ActivitiesService service = ServiceFactory.getActivitiesService();
-        activities = service.getAllActivities();
-        Paginator<Activity> paginator = new Paginator<>(activities, 4);
+        Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
         String pageParameter = request.getParameter("page");
-        if (pageParameter != null) {
-            paginator.setCurrentPage(Integer.parseInt(pageParameter));
+        if(pageParameter != null){
+            paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        request.setAttribute("activities", paginator.getItemsForCurrentPage());
-        request.setAttribute("pagesCount", paginator.getPagesCount());
-        return PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        List<Activity> activities = service.getActivitiesPerPage(paginator.getCurrentPage(), recordsPerPage);
+        request.getSession().setAttribute("activities", activities);
+        request.getSession().setAttribute("pagesCount", paginator.getPagesCount());
+        page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

@@ -1,4 +1,4 @@
-package services;
+package services.impl;
 
 import annotation.Transaction;
 import dao.DaoFactory;
@@ -7,9 +7,7 @@ import entities.*;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
 import services.interfaces.RequestsService;
-import services.interfaces.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +28,11 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Transaction
     @Override
-    public boolean createRequest(String email, String activityDescription) {
-        UserDao userDao = DaoFactory.createUserDao();
+    public boolean createRequest(User user, String activityDescription) {
         ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
 
         try{
-            User user = userDao.findWhereEmailEquals(email);
             Activity activity = activityDao.findWhereDescriptionEquals(activityDescription);
             RequestToAdd requestToAdd = new RequestToAdd();
             requestToAdd.setUserId(user.getUserId());
@@ -47,6 +43,94 @@ public class RequestsServiceImpl implements RequestsService {
             LOGGER.error("Exception in createRequest method.");
         }
         return false;
+    }
+
+    @Override
+    public int getCountOfRowsRequestToAdd() {
+        RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
+        try{
+            return requestToAddDao.getNumberOfRows();
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCountOfRowsRequestToDelete() {
+        RequestToDeleteDao requestToDelete = DaoFactory.createRequestToDeleteDao();
+        try{
+            return requestToDelete.getNumberOfRows();
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Pair<String,String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage){
+        List<Pair<String,String>> result = new ArrayList<>();
+        UserDao userDao = DaoFactory.createUserDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
+        try{
+            List<RequestToAdd> requestsToAdd = requestDao.findRequestsToAddByLimit(currentPage, recordsPerPage);
+            for(RequestToAdd request : requestsToAdd){
+                User user = userDao.findWhereUserIdEquals(request.getUserId());
+                Activity activity = activityDao.findWhereActivityIdEquals(request.getActivityId());
+                result.add(new Pair<>(user.getEmail(), activity.getDescription()));
+            }
+            return result;
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return null;
+    }
+
+    @Override
+    public List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage) {
+        List<Pair<String,String>> result = new ArrayList<>();
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        RequestToDeleteDao requestDao = DaoFactory.createRequestToDeleteDao();
+        try{
+            List<RequestToDelete> requestsToDelete = requestDao.findRequestsToDeleteByLimit(currentPage, recordsPerPage);
+            for(RequestToDelete request : requestsToDelete){
+                Assignment assignment = assignmentDao.findWhereAssignIdAndIsActiveEquals(request.getAssignId(), true);
+                if(assignment != null){
+                    result.add(new Pair<>(assignment.getUserEmail(), assignment.getActivityDescription()));
+                }
+            }
+            return result;
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return null;
+    }
+
+    @Override
+    public boolean checkUsedActivity(User user, String description) {
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        boolean result = false;
+        try{
+            Activity activity = activityDao.findWhereDescriptionEquals(description);
+            RequestToAdd requestToAdd = requestDao.findWhereActivityIdAndUserIdEquals(activity.getActivityId(),
+                    user.getUserId(), true);
+            if(requestToAdd != null) {
+                result = false;
+            } else {
+                Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(user.getEmail(), description, true);
+                if (assignment != null) {
+                    result = false;
+                }else{
+                    result = true;
+                }
+            }
+        }catch (Exception e){
+            LOGGER.error("Exception in checkUsedActivity method.");
+        }
+        return result;
     }
 
     @Override

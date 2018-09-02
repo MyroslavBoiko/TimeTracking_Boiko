@@ -7,7 +7,10 @@
 --%>
 <%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 <html>
-    <%@include file="/WEB-INF/views/comp/head.jsp"%>
+    <head>
+        <title><fmt:message key="profile" bundle="${locale}"/></title>
+        <link rel="stylesheet"  type="text/css" href="../../../css/main.css">
+    </head>
 <body>
     <%--<%@include file="clientSidebar.jsp"%>--%>
     <div class="flex-container">

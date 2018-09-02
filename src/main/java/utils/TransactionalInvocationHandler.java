@@ -20,7 +20,7 @@ public class TransactionalInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (isTransactional(method)) {
-            transactionManager.beginTransaction();
+            transactionManager.startTransaction();
             Object result = method.invoke(target, args);
             if(Objects.isNull(result) || (boolean)result){
                 transactionManager.commit(true);
