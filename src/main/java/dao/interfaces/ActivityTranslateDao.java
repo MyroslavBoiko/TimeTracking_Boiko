@@ -9,6 +9,10 @@ public interface ActivityTranslateDao {
 
     ActivityTranslate findWhereTranslateIdEquals(Long transalteId) throws Exception;
 
+    ActivityTranslate findWhereDescriptionEquals(String description) throws Exception;
+
+    ActivityTranslate findWhereActivityIdAndLanguageIdEquals(Long transalteId, Long languageId) throws Exception;
+
     List<ActivityTranslate> findWhereLanguageIdEquals(Long languageId) throws Exception;
 
     List<ActivityTranslate> findWhereActivityIdEquals(Long activityId) throws Exception;

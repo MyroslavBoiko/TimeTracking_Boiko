@@ -39,8 +39,10 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
             + " WHERE " + COLUMN_USER_ID_FK + " = ?" + " AND "
             + COLUMN_ACTIVITY_ID_FK + " = ?";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " LIMIT ?, ? WHERE " + COLUMN_IS_ACTIVE + " = ?";
+    private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
     private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD;
+    private static final String SQL_SELECT_COUNT_IS_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD
+            + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
@@ -95,8 +97,19 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     }
 
     @Override
+    public List<RequestToAdd> findRequestsToAddIsActiveByLimit( boolean isActive, int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE, isActive, start, recordsPerPage);
+    }
+
+    @Override
     public int getNumberOfRows() throws Exception {
         return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberByActive(boolean isActive) throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT_IS_ACTIVE, isActive);
     }
 
     @Override
@@ -129,11 +142,11 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
                 requestToAdd.setIsActive(resultSet.getBoolean(COLUMN_IS_ACTIVE));
                 result.add(requestToAdd);
             }
+            return result;
         }catch (SQLException e){
             LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.");
             throw new SQLException();
         }
-        return result;
     }
 
     @Override

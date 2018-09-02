@@ -21,6 +21,9 @@ public class Message {
     public static final String LAST_NAME_ERROR = "lastNameError";
     public static final String PASSWORD_ERROR = "passwordError";
     public static final String USED_EMAIL_ERROR = "usedEmailError";
+    public static final String USED_ACTIVITY_ERROR = "usedActivityError";
+    public static final String INPUT_NUMBER_ERROR = "inputNumberError";
+
     public static Message getInstance() {
         if (instance == null) {
             instance = new Message();

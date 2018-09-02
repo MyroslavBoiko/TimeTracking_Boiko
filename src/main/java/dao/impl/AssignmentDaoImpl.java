@@ -50,7 +50,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     private static final String SQL_SELECT_COUNT_BY_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
     private static final String SQL_SELECT_COUNT_FOR_USER ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
-            + " WHERE "+ COLUMN_USER_EMAIL_FK + " = ? "+ "AND " + COLUMN_IS_ACTIVE + " = ?";
+            + " WHERE "+ COLUMN_USER_EMAIL_FK + " = ? " + "AND " + COLUMN_IS_ACTIVE + " = ?";
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 

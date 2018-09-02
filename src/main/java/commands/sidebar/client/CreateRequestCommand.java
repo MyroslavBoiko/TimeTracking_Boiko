@@ -2,6 +2,7 @@ package commands.sidebar.client;
 
 import commands.Command;
 import entities.User;
+import manager.Message;
 import manager.PagesJsp;
 import services.ServiceFactory;
 import services.interfaces.RequestsService;
@@ -22,7 +23,7 @@ public class CreateRequestCommand implements Command {
             service.createRequest(user,description);
             page = PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
         }else {
-            request.setAttribute("errorMessage", "You already have this activity.");
+            request.setAttribute("errorMessage", Message.USED_ACTIVITY_ERROR);
             page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
         }
         request.setAttribute("currentPage", page);

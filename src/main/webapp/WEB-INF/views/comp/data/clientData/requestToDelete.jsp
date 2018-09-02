@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Mirosha
@@ -6,10 +5,11 @@
   Time: 20:30
   To change this template use File | Settings | File Templates.
 --%>
+<%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 <div>
     <form action="controller" method="get">
-        <select name="request" style="width:auto;" size="5">
-            <option disabled>Delete requests</option>
+        <select name="request" style="width:auto;" size="5"  onchange="getElementById('btnEnable').removeAttribute('disabled')">
+            <option disabled><fmt:message key="deleteRequests" bundle="${locale}"/></option>
 
             <c:forEach items="${requestScope.userAssignments}" var="requestToDelete">
                 <option>
@@ -24,6 +24,6 @@
         </c:forEach>
         <br>
         <input type="hidden" name="command" value="requestToDelete"/>
-        <input type="submit" value="Send request to delete"/>
+        <input id="btnEnable" type="submit" value="<fmt:message key="sendRequestToDelete" bundle="${locale}"/>" disabled/>
     </form>
 </div>

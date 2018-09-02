@@ -33,7 +33,7 @@ public class LanguageDaoImpl implements LanguageDao {
             + COLUMN_LANGUAGE_CODE + ") "
             + "VALUES (?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM" + TABLE_LANGUAGE;
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_LANGUAGE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 

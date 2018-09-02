@@ -17,15 +17,19 @@ public interface RequestToAddDao {
 
     List<RequestToAdd> findWhereActiveEquals(boolean isActive) throws Exception;
 
-    List<RequestToAdd> findByVaryingParams(String sql, Object... params) throws Exception;
-
     List<RequestToAdd> findRequestsToAddByLimit(int currentPage, int recordsPerPage) throws Exception;
+
+    List<RequestToAdd> findRequestsToAddIsActiveByLimit(boolean isActive, int currentPage, int recordsPerPage) throws Exception;
+
+    List<RequestToAdd> findByVaryingParams(String sql, Object... params) throws Exception;
 
     int getNumberOfRows() throws Exception;
 
-    void setInactiveRequestToAdd(Long activityId, Long userId) throws Exception;
+    int getNumberByActive(boolean isActive) throws Exception;
 
     int getNumberOfRowsByParams(String sql, Object... params) throws Exception;
+
+    void setInactiveRequestToAdd(Long activityId, Long userId) throws Exception;
 
     void insertNewRequestToAdd(RequestToAdd requestToAdd) throws Exception;
 

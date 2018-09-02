@@ -1,12 +1,11 @@
 package services.interfaces;
 
-import entities.Activity;
+import entities.ActivityTranslate;
 
 import java.util.List;
 
 public interface ActivitiesService extends Service {
 
-    List<Activity> getAllActivities();
-    List<Activity> getActivitiesPerPage(int currentPage, int recordsPerPage);
+    List<ActivityTranslate> getActivitiesPerPage(int currentPage, int recordsPerPage, String locale);
     int getCountOfRows();
 }

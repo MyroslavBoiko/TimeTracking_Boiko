@@ -4,6 +4,7 @@ import dao.interfaces.RequestToDeleteDao;
 import datasource.ConnectionHolder;
 import datasource.Datasource;
 import datasource.TransactionManager;
+import entities.RequestToAdd;
 import entities.RequestToDelete;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
@@ -33,8 +34,11 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
             + COLUMN_USER_ID_FK + ") "
             + "VALUES (?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
     private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
-
+    private static final String SQL_UPDATE_SET_INACTIVE = "UPDATE " + TABLE_REQUEST_TO_DELETE
+            + " SET " + COLUMN_IS_ACTIVE + " = false"
+            + " WHERE " + COLUMN_ASSIGN_ID_FK + " = ?";
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private RequestToDeleteDaoImpl() {}
@@ -77,6 +81,12 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     public List<RequestToDelete> findRequestsToDeleteByLimit(int currentPage, int recordsPerPage) throws Exception {
         int start = currentPage * recordsPerPage - recordsPerPage;
         return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public List<RequestToDelete> findRequestsToDeleteIsActiveByLimit(boolean isActive, int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE,isActive, start, recordsPerPage);
     }
 
     @Override
@@ -130,6 +140,18 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewRequestToDelete method of RequestToDeleteDaoImpl class.");
+            throw new SQLException();
+        }
+    }
+
+    @Override
+    public void setInactive(Long assignId) throws Exception {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement =
+                     PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE),assignId)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.");
             throw new SQLException();
         }
     }

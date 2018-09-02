@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Mirosha
@@ -6,10 +5,11 @@
   Time: 15:35
   To change this template use File | Settings | File Templates.
 --%>
+<%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 <div>
     <form action="controller" method="post">
-        <select name="assignment" style="width:auto;" size="5">
-            <option disabled>Assignments</option>
+        <select name="assignment" style="width:auto;" size="5" onchange="getElementById('btnEnable').removeAttribute('disabled')">
+            <option disabled><fmt:message key="assignments" bundle="${locale}"/></option>
 
             <c:forEach items="${requestScope.assignments}" var="assignment">
                 <option>
@@ -24,7 +24,7 @@
         </c:forEach>
         <br>
         <input type="hidden" name="command" value="adminPage">
-        <input type="submit" value="Return">
+        <input id="btnEnable" type="submit" value="<fmt:message key="return" bundle="${locale}"/>">
 
 
 
