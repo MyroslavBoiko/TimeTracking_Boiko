@@ -20,7 +20,7 @@ public class Message {
     public static final String FIRST_NAME_ERROR = "firstNameError";
     public static final String LAST_NAME_ERROR = "lastNameError";
     public static final String PASSWORD_ERROR = "passwordError";
-
+    public static final String USED_EMAIL_ERROR = "usedEmailError";
     public static Message getInstance() {
         if (instance == null) {
             instance = new Message();

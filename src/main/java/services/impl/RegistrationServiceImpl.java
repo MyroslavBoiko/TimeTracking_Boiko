@@ -23,16 +23,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private RegistrationServiceImpl(){}
 
     @Override
-    public boolean performRegistration(User user){
+    public boolean performRegistration(User user) {
         UserTypeDao userTypeDao = DaoFactory.createUserTypeDao();
-        try{
+        try {
             user.setUserTypeId(userTypeDao.findWhereTypeNameEquals("Client").getUserTypeId());
             UserDao userDao = DaoFactory.createUserDao();
-            if(userDao.findWhereEmailEquals(user.getEmail())== null){
-                userDao.insertNewUser(user);
-                return true;
-            }
-        }catch (Exception e){
+            userDao.insertNewUser(user);
+            return true;
+        } catch (Exception e) {
             LOGGER.error("Exception in performRegistration method.");
         }
         return false;
