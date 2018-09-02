@@ -20,7 +20,9 @@
         <input type="text" name="email" placeholder="<fmt:message key="enterEmail" bundle="${locale}"/>" required>
         <p><fmt:message key="password" bundle="${locale}"/></p>
         <input type="password" name="password" placeholder="<fmt:message key="enterPassword" bundle="${locale}"/>" required>
-        <label class="error"></label>
+        <c:if test="${not empty requestScope.errorMessage}">
+            <label class="error"><fmt:message key="${requestScope.errorMessage}" bundle="${messages}"/></label>
+        </c:if>
         <input type="submit" name="" value="<fmt:message key="logIn" bundle="${locale}"/>">
         <a href="controller?command=registerPage"><fmt:message key="noAccount" bundle="${locale}"/></a>
     </form>

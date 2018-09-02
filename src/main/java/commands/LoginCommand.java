@@ -24,7 +24,7 @@ public class LoginCommand implements Command{
         User user = service.getUser(email);
         UserType userType = service.getUserType(email);
         if (user == null) {
-            request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
+            request.setAttribute("errorMessage", Message.LOGIN_OR_PASS_ERROR);
             page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
         }else{
             if (user.getPassword().equals(PasswordCrypt.encryptPassword(password))) {
@@ -38,7 +38,7 @@ public class LoginCommand implements Command{
                     page = PagesJsp.getInstance().getProperty(PagesJsp.ERROR);
                 }
             }else {
-                request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
+                request.setAttribute("errorMessage", Message.LOGIN_OR_PASS_ERROR);
                 page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
             }
         }

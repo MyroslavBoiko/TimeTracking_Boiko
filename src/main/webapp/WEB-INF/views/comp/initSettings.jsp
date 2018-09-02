@@ -23,4 +23,4 @@
        scope="session" />
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle  basename="locale" var="locale"/>
-<fmt:setBundle basename="message" var="message"/>
+<fmt:setBundle basename="messages" var="messages"/>
