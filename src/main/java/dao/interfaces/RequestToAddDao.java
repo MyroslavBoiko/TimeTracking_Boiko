@@ -11,6 +11,8 @@ public interface RequestToAddDao {
 
     List<RequestToAdd> findWhereActivityIdEquals(Long activityId) throws Exception;
 
+    RequestToAdd findWhereActivityIdAndUserIdEquals(Long activityId, Long userId, boolean isActive) throws Exception;
+
     List<RequestToAdd> findWhereUserIdEquals(Long userId) throws Exception;
 
     List<RequestToAdd> findWhereActiveEquals(boolean isActive) throws Exception;

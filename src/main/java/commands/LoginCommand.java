@@ -3,6 +3,7 @@ package commands;
 import commands.utils.CommandUtils;
 import entities.User;
 import entities.UserType;
+import manager.Message;
 import manager.PagesJsp;
 import services.ServiceFactory;
 import services.interfaces.LoginService;
@@ -23,6 +24,7 @@ public class LoginCommand implements Command{
         User user = service.getUser(email);
         UserType userType = service.getUserType(email);
         if (user == null) {
+            request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
             page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
         }else{
             if (user.getPassword().equals(PasswordCrypt.encryptPassword(password))) {
@@ -36,9 +38,11 @@ public class LoginCommand implements Command{
                     page = PagesJsp.getInstance().getProperty(PagesJsp.ERROR);
                 }
             }else {
+                request.setAttribute("loginOrPassError", Message.getInstance().getProperty(Message.LOGIN_OR_PASS_ERROR));
                 page = PagesJsp.getInstance().getProperty(PagesJsp.LOGIN);
             }
         }
+        request.setAttribute("currentPage", page);
         return page;
     }
 }

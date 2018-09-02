@@ -11,15 +11,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!-- Custom tag  -->
-<%--<%@ taglib uri="/WEB-INF/customtag.tld" prefix="marks"%>--%>
+<%@ taglib uri="/WEB-INF/usertag.tld" prefix="usertag"%>
 
 <%-- Page directive. --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 
-<%-- Locale lang setter --%>
+<%-- LocaleCommand lang setter --%>
 <c:set var="language"
        value="${not empty lang ? lang : pageContext.request.locale.language}"
        scope="session" />
 <fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="locale" var="bundle"/>
+<fmt:setBundle  basename="locale" var="locale"/>
+<fmt:setBundle basename="message" var="message"/>

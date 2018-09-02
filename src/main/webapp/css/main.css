@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    background:#c8c8c8;
     font-family: Arial, Helvetica, sans-serif;
 }
 .flex-container{
@@ -36,7 +37,7 @@ body {
 }
 
 .topnav a.active {
-    background-color: #800000;
+    background-color: #00cc00;
     color: white;
 }
 
@@ -46,6 +47,7 @@ body {
 }
 
 .container .left-side{
+    background-color: #eaeaea;
     display: flex;
     flex-direction: column;
     width: 11.5rem;
@@ -62,9 +64,15 @@ body {
 .left-side {
     background-color: #D8D8D8;
     box-shadow: 5px 5px 10px #888888;
-    border: none;
 }
 
 .left-side a:hover {
     background-color: #909090;
+}
+.picker{
+    margin-left: auto;
+    display: flex;
+}
+.picker .langpick {
+    margin: auto;
 }

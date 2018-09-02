@@ -17,6 +17,7 @@ import java.util.List;
 public class ShowRequestsToAddCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page;
         final int recordsPerPage = 5;
         RequestsService service = ServiceFactory.getRequestsService();
         Paginator paginator = new Paginator(service.getCountOfRowsRequestToAdd(), recordsPerPage);
@@ -27,6 +28,8 @@ public class ShowRequestsToAddCommand implements Command {
         List<Pair<String, String>> requests = service.getRequestsToAddPerPage(paginator.getCurrentPage(), recordsPerPage);
         request.setAttribute("requestsToAdd", requests);
         request.setAttribute("pagesCount", paginator.getPagesCount());
-        return PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_ADD);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_ADD);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

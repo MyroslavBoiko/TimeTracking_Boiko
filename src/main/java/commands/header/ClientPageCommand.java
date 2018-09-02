@@ -11,6 +11,9 @@ import java.io.IOException;
 public class ClientPageCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
+
+        String page = PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

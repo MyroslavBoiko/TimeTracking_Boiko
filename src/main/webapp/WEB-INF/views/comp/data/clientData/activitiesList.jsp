@@ -11,16 +11,20 @@
     <form action="controller" method="get">
         <select name="description" style="width:auto;" size="5">
             <option disabled>Choose activity</option>
-            <c:forEach items="${requestScope.activities}" var="activity">
+            <c:forEach items="${activities}" var="activity">
                 <option><c:out value="${activity.description}"/></option>
             </c:forEach>
         </select>
         <br>
-        <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
+        <c:forEach var="i" begin="1" end="${pagesCount}">
             <a href="controller?command=showActivities&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
         <br>
         <input type="hidden" name="command" value="createAddRequest">
         <input type="submit" value="Add request">
+        <br>
+        <c:if test="${not empty errorMessage}">
+            <p style="color: red"><c:out value="${errorMessage}"/></p>
+        </c:if>
     </form>
 </div>

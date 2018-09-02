@@ -13,10 +13,13 @@ import java.io.IOException;
 public class SaveTimeCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page;
         String description = request.getParameter("description");
         String time = request.getParameter("time");
         AssignmentsService service = ServiceFactory.getAssignmentsService();
         service.saveTime(((User)(request.getSession().getAttribute("user"))).getEmail(), description,time);
-        return PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

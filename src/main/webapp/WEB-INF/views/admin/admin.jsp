@@ -8,11 +8,13 @@
 <%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 
 <html>
-    <%@include file="/WEB-INF/views/comp/head.jsp"%>
+<head>
+    <title><fmt:message key="profile" bundle="${locale}"/></title>
+    <link rel="stylesheet"  type="text/css" href="../../../css/main.css">
+</head>
 <body>
     <div class="flex-container">
         <%@include file="/WEB-INF/views/comp/navbar.jsp"%>
-
     </div>
 </body>
 </html>

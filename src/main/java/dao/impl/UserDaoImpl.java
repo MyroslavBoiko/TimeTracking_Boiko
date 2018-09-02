@@ -2,7 +2,6 @@ package dao.impl;
 
 import dao.interfaces.UserDao;
 import datasource.ConnectionHolder;
-import datasource.Datasource;
 import datasource.TransactionManager;
 import entities.User;
 import org.apache.log4j.Logger;
@@ -22,7 +21,7 @@ public class UserDaoImpl implements UserDao {
     private static final String COLUMN_USER_ID_PK = "user_id";
     private static final String COLUMN_USER_TYPE_ID_FK = "user_type_id";
     private static final String COLUMN_EMAIL = "email";
-    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_PASSWORD = "passwordError";
     private static final String COLUMN_FIRST_NAME = "first_name";
     private static final String COLUMN_LAST_NAME = "last_name";
 

@@ -21,7 +21,7 @@ public class RegistrationCommand implements Command {
         User user = new User();
         try {
             user.setEmail(request.getParameter("email"));
-            user.setPassword(PasswordCrypt.encryptPassword(request.getParameter("password")));
+            user.setPassword(PasswordCrypt.encryptPassword(request.getParameter("passwordError")));
             user.setFirstName(request.getParameter("first_name"));
             user.setLastName(request.getParameter("last_name"));
         }catch (Exception e){
@@ -33,6 +33,7 @@ public class RegistrationCommand implements Command {
         }else {
             page = PagesJsp.getInstance().getProperty(PagesJsp.ERROR);
         }
+        request.setAttribute("currentPage", page);
         return page;
     }
 }

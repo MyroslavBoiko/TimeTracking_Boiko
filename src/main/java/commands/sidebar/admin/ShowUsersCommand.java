@@ -1,5 +1,6 @@
 package commands.sidebar.admin;
 
+import com.sun.org.apache.regexp.internal.RE;
 import commands.Command;
 import commands.utils.Paginator;
 import entities.User;
@@ -17,6 +18,7 @@ public class ShowUsersCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page;
         final int recordsPerPage = 5;
         UsersService service = ServiceFactory.getUsersService();
         Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
@@ -27,6 +29,8 @@ public class ShowUsersCommand implements Command {
         List<User> users = service.getUsersPerPage(paginator.getCurrentPage(), recordsPerPage);
         request.setAttribute("users", users);
         request.setAttribute("pagesCount", paginator.getPagesCount());
-        return PagesJsp.getInstance().getProperty(PagesJsp.USERS_DATA);
+        page =  PagesJsp.getInstance().getProperty(PagesJsp.USERS_DATA);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

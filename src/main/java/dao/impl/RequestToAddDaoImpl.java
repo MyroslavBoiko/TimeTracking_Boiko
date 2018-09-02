@@ -80,6 +80,15 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     }
 
     @Override
+    public RequestToAdd findWhereActivityIdAndUserIdEquals(Long activityId, Long userId, boolean isActive) throws Exception {
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT
+                + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?"
+                + " AND " + COLUMN_USER_ID_FK + " = ?"
+                + " AND " + COLUMN_IS_ACTIVE + " = ?",
+                activityId, userId, isActive));
+    }
+
+    @Override
     public List<RequestToAdd> findRequestsToAddByLimit(int currentPage, int recordsPerPage) throws Exception {
         int start = currentPage * recordsPerPage - recordsPerPage;
         return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);

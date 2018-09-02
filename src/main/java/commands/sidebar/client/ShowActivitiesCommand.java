@@ -16,7 +16,7 @@ import java.util.List;
 public class ShowActivitiesCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String page;
         final int recordsPerPage = 5;
         ActivitiesService service = ServiceFactory.getActivitiesService();
         Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
@@ -25,8 +25,10 @@ public class ShowActivitiesCommand implements Command {
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
         List<Activity> activities = service.getActivitiesPerPage(paginator.getCurrentPage(), recordsPerPage);
-        request.setAttribute("activities", activities);
-        request.setAttribute("pagesCount", paginator.getPagesCount());
-        return PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        request.getSession().setAttribute("activities", activities);
+        request.getSession().setAttribute("pagesCount", paginator.getPagesCount());
+        page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

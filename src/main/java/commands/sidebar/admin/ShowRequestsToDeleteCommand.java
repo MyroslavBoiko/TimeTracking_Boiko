@@ -18,6 +18,7 @@ import java.util.List;
 public class ShowRequestsToDeleteCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page;
         final int recordsPerPage = 5;
         RequestsService service = ServiceFactory.getRequestsService();
         Paginator paginator = new Paginator(service.getCountOfRowsRequestToDelete(), recordsPerPage);
@@ -28,6 +29,8 @@ public class ShowRequestsToDeleteCommand implements Command {
         List<Pair<String, String>> requests = service.getRequestsToDeletePerPage(paginator.getCurrentPage(), recordsPerPage);
         request.setAttribute("requestsToDelete", requests);
         request.setAttribute("pagesCount", paginator.getPagesCount());
-        return PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_DELETE);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_DELETE);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

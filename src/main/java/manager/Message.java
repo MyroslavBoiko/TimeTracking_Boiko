@@ -14,10 +14,12 @@ public class Message {
 
     private static Message instance;
     private ResourceBundle resource;
-    private static final String BUNDLE_NAME = "pages.pagescfg";
-    public static final String SERVLET_EXCEPTION = "SERVLET_EXCEPTION";
-    public static final String IO_EXCEPTION = "IO_EXCEPTION";
-    public static final String LOGIN_ERROR = "LOGIN_ERROR";
+    private static final String BUNDLE_NAME = "messages";
+    public static final String LOGIN_OR_PASS_ERROR = "loginOrPassError";
+    public static final String EMAIL_ERROR = "emailError";
+    public static final String FIRST_NAME_ERROR = "firstNameError";
+    public static final String LAST_NAME_ERROR = "lastNameError";
+    public static final String PASSWORD_ERROR = "passwordError";
 
     public static Message getInstance() {
         if (instance == null) {

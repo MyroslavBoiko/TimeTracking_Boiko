@@ -28,13 +28,11 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Transaction
     @Override
-    public boolean createRequest(String email, String activityDescription) {
-        UserDao userDao = DaoFactory.createUserDao();
+    public boolean createRequest(User user, String activityDescription) {
         ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
 
         try{
-            User user = userDao.findWhereEmailEquals(email);
             Activity activity = activityDao.findWhereDescriptionEquals(activityDescription);
             RequestToAdd requestToAdd = new RequestToAdd();
             requestToAdd.setUserId(user.getUserId());
@@ -107,6 +105,32 @@ public class RequestsServiceImpl implements RequestsService {
             LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
         }
         return null;
+    }
+
+    @Override
+    public boolean checkUsedActivity(User user, String description) {
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        boolean result = false;
+        try{
+            Activity activity = activityDao.findWhereDescriptionEquals(description);
+            RequestToAdd requestToAdd = requestDao.findWhereActivityIdAndUserIdEquals(activity.getActivityId(),
+                    user.getUserId(), true);
+            if(requestToAdd != null) {
+                result = false;
+            } else {
+                Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(user.getEmail(), description, true);
+                if (assignment != null) {
+                    result = false;
+                }else{
+                    result = true;
+                }
+            }
+        }catch (Exception e){
+            LOGGER.error("Exception in checkUsedActivity method.");
+        }
+        return result;
     }
 
     @Override

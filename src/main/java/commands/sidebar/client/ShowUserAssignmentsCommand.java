@@ -37,6 +37,7 @@ public class ShowUserAssignmentsCommand implements Command {
         }else{
             page = PagesJsp.getInstance().getProperty(PagesJsp.ASSIGNMENTS_TO_DELETE);
         }
+        request.setAttribute("currentPage", page);
         return page;
     }
 }

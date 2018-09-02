@@ -11,10 +11,8 @@ import java.io.IOException;
 public class LogOutCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        request.getSession().setAttribute("user", null);
+        request.getSession().setAttribute("type", null);
         return PagesJsp.getInstance().getProperty(PagesJsp.INDEX);
     }
 }
