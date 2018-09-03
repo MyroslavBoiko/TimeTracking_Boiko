@@ -1,1 +1,0 @@
-INSERT INTO user (user_type_id, email, password, first_name, last_name) VALUES (1,'admin@gmail.com','d0133e212ae3148aeb516610fc211410aec1358510c14da997', 'Admin', 'Admin');

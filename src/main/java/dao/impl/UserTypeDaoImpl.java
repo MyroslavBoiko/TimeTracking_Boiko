@@ -13,7 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+
+/**
+ * @author Mirosha
+ */
 
 public class UserTypeDaoImpl implements UserTypeDao {
 
@@ -62,11 +67,6 @@ public class UserTypeDaoImpl implements UserTypeDao {
                 + " WHERE "+ COLUMN_TYPE_NAME + " = ?", typeName));
     }
 
-    @Override
-    public List<UserType> findUserTypesByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
-    }
 
     @Override
     public int getNumberOfRows() throws Exception {
@@ -106,18 +106,6 @@ public class UserTypeDaoImpl implements UserTypeDao {
             throw new SQLException();
         }
         return result;
-    }
-
-    @Override
-    public void insertNewType(UserType userType) throws Exception {
-        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_USERTYPE),
-                     userType.getTypeName())) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewType method of UserTypeDaoImpl class.");
-            throw new SQLException();
-        }
     }
 
     private UserType fetchSingleResult(List<UserType> userTypes) {

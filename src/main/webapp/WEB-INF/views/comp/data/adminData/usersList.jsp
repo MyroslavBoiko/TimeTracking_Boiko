@@ -8,12 +8,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-
+<%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
 <div>
     <table style="width:auto">
         <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
+            <th><fmt:message key="firstName" bundle="${locale}"/></th>
+            <th><fmt:message key="lastName" bundle="${locale}"/></th>
         </tr>
 
         <c:forEach items="${requestScope.users}" var="user">

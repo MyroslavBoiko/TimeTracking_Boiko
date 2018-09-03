@@ -20,12 +20,13 @@ public class ShowRequestsToAddCommand implements Command {
         String page;
         final int recordsPerPage = 5;
         RequestsService service = ServiceFactory.getRequestsService();
-        Paginator paginator = new Paginator(service.getCountOfRowsRequestToAdd(), recordsPerPage);
+        Paginator paginator = new Paginator(service.getCountOfRowsRequestToAdd(true), recordsPerPage);
         String pageParameter = request.getParameter("page");
+        String language = (String)request.getSession().getAttribute("language");
         if(pageParameter != null){
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        List<Pair<String, String>> requests = service.getRequestsToAddPerPage(paginator.getCurrentPage(), recordsPerPage);
+        List<Pair<String, String>> requests = service.getRequestsToAddPerPage(paginator.getCurrentPage(), recordsPerPage, language);
         request.setAttribute("requestsToAdd", requests);
         request.setAttribute("pagesCount", paginator.getPagesCount());
         page = PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_ADD);

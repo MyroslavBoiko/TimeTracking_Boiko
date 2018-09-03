@@ -3,6 +3,7 @@ package commands.sidebar.client;
 import commands.Command;
 import commands.utils.Paginator;
 import entities.Activity;
+import entities.ActivityTranslate;
 import manager.PagesJsp;
 import services.ServiceFactory;
 import services.interfaces.ActivitiesService;
@@ -24,7 +25,10 @@ public class ShowActivitiesCommand implements Command {
         if(pageParameter != null){
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        List<Activity> activities = service.getActivitiesPerPage(paginator.getCurrentPage(), recordsPerPage);
+        System.out.println((String)request.getSession().getAttribute("language"));
+        List<ActivityTranslate> activities = service.getActivitiesPerPage(paginator.getCurrentPage(),
+                recordsPerPage,
+                (String)request.getSession().getAttribute("language"));
         request.getSession().setAttribute("activities", activities);
         request.getSession().setAttribute("pagesCount", paginator.getPagesCount());
         page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);

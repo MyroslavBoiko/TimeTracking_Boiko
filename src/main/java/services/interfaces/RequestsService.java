@@ -8,9 +8,13 @@ import javafx.util.Pair;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public interface RequestsService extends Service {
 
-    boolean createRequest(User user, String activityDescription);
+    boolean createRequest(User user, String description);
 
     List<RequestToAdd> getAllActiveAddRequests();
 
@@ -20,17 +24,17 @@ public interface RequestsService extends Service {
 
     List<RequestToDelete> getAllActiveDeleteRequests();
 
-    List<Pair<String, String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage);
+    List<Pair<String, String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage, String language);
 
-    List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage);
+    List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage, String language);
 
     boolean checkUsedActivity(User user, String description);
 
-    boolean setInactiveToRequest(String userEmail, String activityDescription);
+    boolean setInactiveToRequest(String userEmail, String description);
 
     boolean createRequestToDelete(String email, String description);
 
-    int getCountOfRowsRequestToAdd();
+    int getCountOfRowsRequestToAdd(boolean isActive);
 
-    int getCountOfRowsRequestToDelete();
+    int getCountOfRowsRequestToDelete(boolean isActive);
 }

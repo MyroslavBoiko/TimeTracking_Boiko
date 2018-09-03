@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class RequestToAddDaoImpl implements RequestToAddDao {
 
     private static final Logger LOGGER = Logger.getLogger(RequestToAddDaoImpl.class);
@@ -39,8 +43,10 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
             + " WHERE " + COLUMN_USER_ID_FK + " = ?" + " AND "
             + COLUMN_ACTIVITY_ID_FK + " = ?";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " LIMIT ?, ? WHERE " + COLUMN_IS_ACTIVE + " = ?";
+    private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
     private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD;
+    private static final String SQL_SELECT_COUNT_IS_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD
+            + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
@@ -59,22 +65,6 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     }
 
     @Override
-    public RequestToAdd findWhereAddIdEquals(Long addId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ADD_ID_PK + " = ?", addId));
-    }
-
-    @Override
-    public List<RequestToAdd> findWhereActivityIdEquals(Long activityId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?", activityId);
-    }
-
-    @Override
-    public List<RequestToAdd> findWhereUserIdEquals(Long userId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE" + COLUMN_USER_ID_FK + " = ?", userId);
-    }
-
-    @Override
     public List<RequestToAdd> findWhereActiveEquals(boolean isActive) throws Exception {
         return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
     }
@@ -89,14 +79,19 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     }
 
     @Override
-    public List<RequestToAdd> findRequestsToAddByLimit(int currentPage, int recordsPerPage) throws Exception {
+    public List<RequestToAdd> findRequestsToAddIsActiveByLimit( boolean isActive, int currentPage, int recordsPerPage) throws Exception {
         int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+        return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE, isActive, start, recordsPerPage);
     }
 
     @Override
     public int getNumberOfRows() throws Exception {
         return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberByActive(boolean isActive) throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT_IS_ACTIVE, isActive);
     }
 
     @Override
@@ -129,11 +124,11 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
                 requestToAdd.setIsActive(resultSet.getBoolean(COLUMN_IS_ACTIVE));
                 result.add(requestToAdd);
             }
+            return result;
         }catch (SQLException e){
             LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.");
             throw new SQLException();
         }
-        return result;
     }
 
     @Override
