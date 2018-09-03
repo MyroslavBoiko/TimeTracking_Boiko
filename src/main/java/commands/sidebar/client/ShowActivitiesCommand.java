@@ -5,6 +5,7 @@ import commands.utils.Paginator;
 import entities.Activity;
 import entities.ActivityTranslate;
 import manager.PagesJsp;
+import org.apache.log4j.Logger;
 import services.ServiceFactory;
 import services.interfaces.ActivitiesService;
 
@@ -18,8 +19,12 @@ import java.util.List;
  * @author Mirosha
  */
 public class ShowActivitiesCommand implements Command {
+
+    private static final Logger LOGGER = Logger.getLogger(ShowActivitiesCommand.class);
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of ShowActivitiesCommand");
         String page = null;
         final int recordsPerPage = 5;
         ActivitiesService service = ServiceFactory.getActivitiesService();

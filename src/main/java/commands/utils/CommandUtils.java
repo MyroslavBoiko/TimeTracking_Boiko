@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
+ * Util class for commands.
+ *
  * @author Mirosha
  */
 public class CommandUtils {

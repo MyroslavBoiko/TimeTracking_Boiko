@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of ActivityDao interface.
+ *
  * @author Mirosha
  */
 public class ActivityDaoImpl implements ActivityDao {

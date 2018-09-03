@@ -25,6 +25,7 @@ public class ShowUserAssignmentsCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of ShowUserAssignmentsCommand");
         final int recordsPerPage = 5;
         String page;
         String email = ((User) request.getSession().getAttribute("user")).getEmail();

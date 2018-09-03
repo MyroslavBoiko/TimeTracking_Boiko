@@ -5,6 +5,9 @@ import entities.Assignment;
 import java.util.List;
 
 /**
+ * DAO interface to work with user assignments
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface AssignmentDao {

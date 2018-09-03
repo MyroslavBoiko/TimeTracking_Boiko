@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of RequestToDeleteDao interface.
+ *
  * @author Mirosha
  */
 public class RequestToDeleteDaoImpl implements RequestToDeleteDao {

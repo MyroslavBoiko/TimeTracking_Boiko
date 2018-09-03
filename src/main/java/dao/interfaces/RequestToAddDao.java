@@ -5,6 +5,9 @@ import entities.RequestToAdd;
 import java.util.List;
 
 /**
+ * DAO interface to work with requests to add
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface RequestToAddDao {

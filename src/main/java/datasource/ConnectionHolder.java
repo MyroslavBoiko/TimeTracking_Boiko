@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * Connection holder used for providing
+ * the connection for users.
+ *
  * @author Mirosha
  */
 public class ConnectionHolder implements AutoCloseable {

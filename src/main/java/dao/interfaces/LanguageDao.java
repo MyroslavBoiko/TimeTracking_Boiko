@@ -5,6 +5,9 @@ import entities.Language;
 import java.util.List;
 
 /**
+ * DAO interface to work with language
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface LanguageDao {

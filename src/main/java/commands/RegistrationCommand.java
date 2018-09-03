@@ -21,7 +21,7 @@ public class RegistrationCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.debug("Start of executing RegistrationCommand");
+        LOGGER.debug("Execution of RegistrationCommand");
         String page = null;
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -46,7 +46,6 @@ public class RegistrationCommand implements Command {
             LOGGER.error("Exception in RegistrationCommand");
         }
         request.setAttribute("currentPage", page);
-        LOGGER.debug("End of executing RegistrationCommand");
         return page;
     }
 }

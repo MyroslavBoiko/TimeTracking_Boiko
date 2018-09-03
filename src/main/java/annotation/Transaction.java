@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Annotation for providing the SQL transactions.
+ *
  * @author Mirosha
  */
 @Target(value= ElementType.METHOD)

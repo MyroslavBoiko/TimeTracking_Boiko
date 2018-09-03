@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
+ * Connection pool provider.
+ *
  * @author Mirosha
  */
 public class Datasource {

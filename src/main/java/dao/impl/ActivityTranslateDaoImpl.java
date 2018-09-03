@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of ActivityTranslateDao interface.
+ *
  * @author Mirosha
  */
 public class ActivityTranslateDaoImpl implements ActivityTranslateDao {

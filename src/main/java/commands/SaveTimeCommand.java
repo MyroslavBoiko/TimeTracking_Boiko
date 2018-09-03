@@ -22,7 +22,7 @@ public class SaveTimeCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.debug("Start of executing SaveTimeCommand");
+        LOGGER.debug("Execution of SaveTimeCommand");
         String page;
         String description = request.getParameter("description");
         String time = request.getParameter("time");
@@ -36,7 +36,6 @@ public class SaveTimeCommand implements Command {
             page = PagesJsp.getInstance().getProperty(PagesJsp.SET_TIME);
         }
         request.setAttribute("currentPage", page);
-        LOGGER.debug("End of executing SaveTimeCommand");
         return page;
 
     }

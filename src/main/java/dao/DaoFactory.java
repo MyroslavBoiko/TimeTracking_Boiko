@@ -4,6 +4,8 @@ import dao.impl.*;
 import dao.interfaces.*;
 
 /**
+ * Factory provides access to DAO instances.
+ *
  * @author Mirosha
  */
 public class DaoFactory {

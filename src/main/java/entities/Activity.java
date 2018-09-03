@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
+ * Activity class holds name of activity,
+ * that can be used by client in the program.
+ *
  * @author Mirosha
  */
 public class Activity implements Serializable {

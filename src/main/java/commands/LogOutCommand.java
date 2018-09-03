@@ -18,6 +18,7 @@ public class LogOutCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of LogOutCommand");
         request.getSession().invalidate();
         return PagesJsp.getInstance().getProperty(PagesJsp.INDEX);
     }

@@ -5,6 +5,9 @@ import entities.UserType;
 import java.util.List;
 
 /**
+ * DAO interface to work with user types
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface UserTypeDao {

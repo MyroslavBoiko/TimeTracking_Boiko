@@ -17,6 +17,8 @@ import java.util.Formatter;
 import java.util.List;
 
 /**
+ * Implementation of UserTypeDao interface.
+ *
  * @author Mirosha
  */
 public class UserTypeDaoImpl implements UserTypeDao {

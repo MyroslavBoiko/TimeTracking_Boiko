@@ -5,6 +5,9 @@ import entities.Activity;
 import java.util.List;
 
 /**
+ * DAO interface to work with activities
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface ActivityDao {

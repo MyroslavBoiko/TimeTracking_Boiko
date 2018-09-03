@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 import java.sql.SQLException;
 
 /**
+ * Class performs work to provide connection and
+ * manage transactions.
+ *
  * @author Mirosha
  */
 public class TransactionManager {

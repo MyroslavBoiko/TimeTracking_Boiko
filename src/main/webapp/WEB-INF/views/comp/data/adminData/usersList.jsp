@@ -5,7 +5,6 @@
   Time: 12:02
   To change this template use File | Settings | File Templates.
 --%>
-
 <%@include file="/WEB-INF/views/comp/initSettings.jsp" %>
 <div>
     <form action="controller" method="post">

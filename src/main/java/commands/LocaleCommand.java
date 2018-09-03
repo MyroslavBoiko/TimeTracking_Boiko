@@ -17,6 +17,7 @@ public class LocaleCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of LocaleCommand");
         request.getSession().setAttribute("lang", request.getParameter("localeLang"));
         String page = request.getParameter("pageParam");
         if (page == null || page.equals("")) {

@@ -3,6 +3,7 @@ package commands.sidebar.admin;
 import commands.Command;
 import entities.Assignment;
 import manager.PagesJsp;
+import org.apache.log4j.Logger;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
 
@@ -16,8 +17,12 @@ import java.util.List;
  * @author Mirosha
  */
 public class ShowActiveAssignments implements Command {
+
+    private static final Logger LOGGER = Logger.getLogger(ShowActiveAssignments.class);
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of ShowActiveAssignments");
         String page;
         String lang = (String) request.getSession().getAttribute("language");
         AssignmentsService service = ServiceFactory.getAssignmentsService();

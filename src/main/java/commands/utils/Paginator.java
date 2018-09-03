@@ -1,6 +1,8 @@
 package commands.utils;
 
 /**
+ * Class for pagination of records.
+ *
  * @author Mirosha
  */
 

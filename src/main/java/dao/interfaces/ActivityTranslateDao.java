@@ -5,6 +5,9 @@ import entities.ActivityTranslate;
 import java.util.List;
 
 /**
+ * DAO interface to work with activity translation
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface ActivityTranslateDao {

@@ -24,6 +24,7 @@ public class LoginCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.debug("Execution of LoginCommand");
         String page;
         String email = request.getParameter("email");
         String password = request.getParameter("password");

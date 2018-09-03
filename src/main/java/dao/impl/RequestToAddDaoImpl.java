@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of RequestToAddDao interface.
+ *
  * @author Mirosha
  */
 public class RequestToAddDaoImpl implements RequestToAddDao {

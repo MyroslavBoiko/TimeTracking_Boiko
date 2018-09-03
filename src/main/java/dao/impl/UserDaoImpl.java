@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of UserDao interface.
+ *
  * @author Mirosha
  */
 public class UserDaoImpl implements UserDao {

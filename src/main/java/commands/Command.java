@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Interface provides a way of interaction
+ * user requests and business logic.
+ *
  * @author Mirosha
  */
 public interface Command {

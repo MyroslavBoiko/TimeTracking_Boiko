@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of AssignmentDao interface.
+ *
  * @author Mirosha
  */
 public class AssignmentDaoImpl implements AssignmentDao {

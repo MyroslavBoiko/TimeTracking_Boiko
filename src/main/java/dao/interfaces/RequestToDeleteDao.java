@@ -5,6 +5,9 @@ import entities.RequestToDelete;
 import java.util.List;
 
 /**
+ * DAO interface to work with requests to delete
+ * instances of database.
+ *
  * @author Mirosha
  */
 public interface RequestToDeleteDao {

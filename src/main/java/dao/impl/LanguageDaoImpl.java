@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Implementation of LanguageDao interface.
+ *
  * @author Mirosha
  */
 public class LanguageDaoImpl implements LanguageDao {
