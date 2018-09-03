@@ -20,7 +20,7 @@
             </c:forEach>
         </select>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
-            <a href="controller?command=showUserAssignments&page=${i}"><c:out value="${i}"/></a>
+            <a href="controller?command=showMyAssignments&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
         <br>
         <input type="hidden" name="command" value="setTime">
