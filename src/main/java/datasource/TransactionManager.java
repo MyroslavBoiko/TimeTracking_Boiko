@@ -6,31 +6,32 @@ import java.sql.SQLException;
 
 public class TransactionManager {
 
-    private final Datasource DATA_SOURCE = Datasource.getInstance();
-    private static TransactionManager ourInstance = new TransactionManager();
+    private final Datasource datasource = Datasource.getInstance();
+    private static TransactionManager instance;
     private final ThreadLocal<ConnectionHolder> currentConnection = new ThreadLocal<>();
 
-    private static Logger LOGGER = Logger.getLogger(TransactionManager.class);
-
-    public static TransactionManager getInstance() {
-        return ourInstance;
-    }
+    private final static Logger LOGGER = Logger.getLogger(TransactionManager.class);
 
     private TransactionManager() {
+
+    }
+
+    public static TransactionManager getInstance() {
+        if(instance == null){
+            instance = new TransactionManager();
+        }
+        return instance;
     }
 
     public ConnectionHolder getConnection() {
-
         if (currentConnection.get() == null) {
-            return new ConnectionHolder(DATA_SOURCE.getConnection());
+            return new ConnectionHolder(datasource.getConnection());
         } else {
             return provideConnection();
         }
-
     }
 
-    public ConnectionHolder beginTransaction() {
-
+    public ConnectionHolder startTransaction() {
         if (currentConnection.get() != null) {
             throw new IllegalStateException();
         }
@@ -38,13 +39,10 @@ public class TransactionManager {
     }
 
     public void commit(boolean success) {
-
         if (currentConnection.get() == null) {
             throw new IllegalStateException();
         }
-
         currentConnection.get().setTransactionActive(false);
-
         try {
             if(success){
                 currentConnection.get().commit();
@@ -62,7 +60,6 @@ public class TransactionManager {
                 LOGGER.error("Can`t connect to DB", e);
             }
         }
-
         currentConnection.set(null);
     }
 
@@ -71,16 +68,13 @@ public class TransactionManager {
         if (currentConnection.get() != null) {
             return currentConnection.get();
         }
-
-        currentConnection.set(new ConnectionHolder(DATA_SOURCE.getConnection()));
+        currentConnection.set(new ConnectionHolder(datasource.getConnection()));
         currentConnection.get().setTransactionActive(true);
-
         try {
             currentConnection.get().setAutoCommit(false);
         } catch (SQLException e) {
             LOGGER.error("Can`t connect to DB", e);
         }
-
         return currentConnection.get();
     }
 }

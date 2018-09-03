@@ -35,6 +35,7 @@ public class Controller extends HttpServlet {
         }catch (ServletException | IOException e){
             LOGGER.error("Exception in servlet method.");
         }
+        request.setAttribute("currentPage", page);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
         dispatcher.forward(request, response);
     }

@@ -3,7 +3,6 @@ package commands.sidebar.admin;
 import commands.Command;
 import entities.Assignment;
 import manager.PagesJsp;
-import services.AssignmentsServiceImpl;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
 
@@ -16,9 +15,12 @@ import java.util.List;
 public class ShowActiveAssignments implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String page;
         AssignmentsService service = ServiceFactory.getAssignmentsService();
         List<Assignment> assignments = service.getActiveAssignments();
         request.setAttribute("assignments", assignments);
-        return PagesJsp.getInstance().getProperty(PagesJsp.ACTIVE_ASSIGNMENTS);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVE_ASSIGNMENTS);
+        request.setAttribute("currentPage", page);
+        return page;
     }
 }

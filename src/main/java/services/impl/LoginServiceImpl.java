@@ -1,4 +1,4 @@
-package services;
+package services.impl;
 
 import dao.DaoFactory;
 import dao.interfaces.UserDao;
@@ -7,7 +7,6 @@ import entities.User;
 import entities.UserType;
 import org.apache.log4j.Logger;
 import services.interfaces.LoginService;
-import services.interfaces.Service;
 
 public class LoginServiceImpl implements LoginService {
 

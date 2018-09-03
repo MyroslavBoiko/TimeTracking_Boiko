@@ -7,9 +7,9 @@
 --%>
 <div class="container">
     <div class="left-side">
-        <a href="controller?command=showActivities">Activities</a>
-        <a href="controller?command=showMyAssignments">My Assignments</a>
-        <a href="controller?command=showMyAssignments&choose=delete">Delete Assign</a>
+        <a href="controller?command=showActivities"><fmt:message key="activity" bundle="${locale}"/></a>
+        <a href="controller?command=showMyAssignments"><fmt:message key="myAssignments" bundle="${locale}"/></a>
+        <a href="controller?command=showMyAssignments&choose=delete"><fmt:message key="deleteAssign" bundle="${locale}"/></a>
     </div>
     <div class="right-side">
 

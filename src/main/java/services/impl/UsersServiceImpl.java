@@ -1,10 +1,9 @@
-package services;
+package services.impl;
 
 import dao.DaoFactory;
 import dao.interfaces.UserDao;
 import entities.User;
 import org.apache.log4j.Logger;
-import services.interfaces.Service;
 import services.interfaces.UsersService;
 
 import java.util.List;
@@ -25,13 +24,24 @@ public class UsersServiceImpl implements UsersService {
     private UsersServiceImpl(){}
 
     @Override
-    public List<User> getAllUsers(){
+    public List<User> getUsersPerPage(int currentPage, int recordsPerPage){
         UserDao userDao = DaoFactory.createUserDao();
         try{
-            return userDao.findAll();
+            return userDao.findUsersByLimit(currentPage, recordsPerPage);
         }catch (Exception e){
             LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
         }
         return null;
+    }
+
+    @Override
+    public int getCountOfRows() {
+        UserDao userDao = DaoFactory.createUserDao();
+        try{
+            return userDao.getNumberOfRows();
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
     }
 }

@@ -7,15 +7,8 @@
 --%>
 
 <div class="topnav">
-    <a href="controller?command=indexPage" class="active left btn" ><h1>Home</h1></a>
-    <div>
-        <select name="lang">
-            <option value="ru">Ukrainian</option>
-            <option value="ru">Russian</option>
-            <option value="en">English</option>
-        </select>
-    </div>
-
-    <a href="controller?command=loginPage" class="right btn" style="margin-left: auto"><h1>Log in</h1></a>
-    <a href="controller?command=registerPage" class="right btn"><h1>Sign up</h1></a>
+    <a href="controller?command=indexPage" class="active left btn" ><h1><fmt:message key="homePage" bundle="${locale}"/></h1></a>
+    <%@include file="/WEB-INF/views/comp/languagePicker.jsp"%>
+    <a href="controller?command=loginPage" class="right btn" style="margin-left: auto"><h1><fmt:message key="logIn" bundle="${locale}"/></h1></a>
+    <a href="controller?command=registerPage" class="right btn"><h1><fmt:message key="signUp" bundle="${locale}"/></h1></a>
 </div>

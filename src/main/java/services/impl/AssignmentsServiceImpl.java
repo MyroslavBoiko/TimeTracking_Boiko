@@ -1,4 +1,4 @@
-package services;
+package services.impl;
 
 import dao.DaoFactory;
 import dao.interfaces.ActivityDao;
@@ -8,8 +8,8 @@ import entities.Activity;
 import entities.Assignment;
 import entities.User;
 import org.apache.log4j.Logger;
+import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
-import services.interfaces.Service;
 
 import java.util.List;
 
@@ -100,5 +100,50 @@ public class AssignmentsServiceImpl implements AssignmentsService {
             LOGGER.error("Exception in setAssignInactive method.");
         }
         return false;
+    }
+    @Override
+    public List<Assignment> getAssignmentsPerPage(boolean isActive, int currentPage, int recordsPerPage){
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        try{
+            return assignmentDao.findAssignmentsByLimitWhereIsActive(isActive, currentPage, recordsPerPage);
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return null;
+    }
+
+    @Override
+    public List<Assignment> getUserAssignmentsPerPage(String email,boolean isActive, int currentPage, int recordsPerPage ){
+        List<Assignment> result;
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        try {
+            result = assignmentDao.findAssignmentsByLimitForUser(email, isActive, currentPage, recordsPerPage);
+            return result;
+        }catch (Exception e){
+            LOGGER.error("Exception in getUserAssignments method.");
+        }
+        return null;
+    }
+
+    @Override
+    public int getCountForUser(String email, boolean isActive) {
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        try{
+            return assignmentDao.getNumberForUser(email, isActive);
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCountOfRows(boolean isActive) {
+        AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        try{
+            return assignmentDao.getNumberByActive(isActive);
+        }catch (Exception e){
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        }
+        return 0;
     }
 }

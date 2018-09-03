@@ -6,16 +6,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@include file="/WEB-INF/views/comp/initSettings.jsp"%>
-<%--<%@ taglib prefix="tag" uri="/WEB-INF/usertag.tld" %>--%>
 
 <html>
-    <%@include file="/WEB-INF/views/comp/head.jsp"%>
+<head>
+    <title><fmt:message key="homePage" bundle="${locale}"/> </title>
+    <link rel="stylesheet"  type="text/css" href="css/main.css">
+</head>
   <body>
   <c:set var = "isIndex" value = "${true}"/>
     <div class="flex-container">
         <%@include file="/WEB-INF/views/comp/navbar.jsp"%>
     </div>
-
-
   </body>
 </html>

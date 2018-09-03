@@ -1,3 +1,4 @@
+
 <%--
   Created by IntelliJ IDEA.
   User: Mirosha
@@ -10,27 +11,25 @@
 <div class="topnav">
     <c:choose>
         <c:when test="${isIndex}">
-            <a href="controller?command=indexPage" class="active left btn"><h1>Home</h1></a>
-            <a href="controller?command=clientPage" class="left btn"><h1>Profile <usertag:myTag firstname="${user.firstName}" lastname="${user.lastName}"/></h1></a>
-            <div>
-                <select name="lang">
-                    <option value="ru">Ukrainian</option>
-                    <option value="ru">Russian</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
+            <a href="controller?command=indexPage" class="active left btn"><h1><fmt:message key="homePage" bundle="${locale}"/></h1></a>
+            <a href="controller?command=clientPage" class="left btn">
+                <h1>
+                    <fmt:message key="profile" bundle="${locale}"/>
+                    <usertag:myTag firstname="${user.firstName}" lastname="${user.lastName}"/>
+                </h1>
+            </a>
+            <%@include file="/WEB-INF/views/comp/languagePicker.jsp"%>
         </c:when>
         <c:otherwise>
-            <a href="controller?command=indexPage" class="left btn"><h1>Home</h1></a>
-            <a href="controller?command=clientPage" class="active left btn"><h1>Profile <usertag:myTag firstname="${user.firstName}" lastname="${user.lastName}"/></h1></a>
-            <div>
-                <select name="lang">
-                    <option value="ru">Ukrainian</option>
-                    <option value="ru">Russian</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
+            <a href="controller?command=indexPage" class="left btn"><h1><fmt:message key="homePage" bundle="${locale}"/></h1></a>
+            <a href="controller?command=clientPage" class="active left btn">
+                <h1>
+                    <fmt:message key="profile" bundle="${locale}"/>
+                    <usertag:myTag firstname="${user.firstName}" lastname="${user.lastName}"/>
+                </h1>
+            </a>
+            <%@include file="/WEB-INF/views/comp/languagePicker.jsp"%>
         </c:otherwise>
     </c:choose>
-    <a href="controller?command=logout" class="right btn" style="margin-left: auto"><h1>Log out</h1></a>
+    <a href="controller?command=logout" class="right btn" style="margin-left: auto"><h1><fmt:message key="logOut" bundle="${locale}"/></h1></a>
 </div>

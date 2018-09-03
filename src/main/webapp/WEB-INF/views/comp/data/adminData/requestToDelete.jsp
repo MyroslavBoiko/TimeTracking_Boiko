@@ -8,7 +8,7 @@
 --%>
 <div>
     <form action="controller" method="get">
-        <select name="request" style="width:auto;" multiple size="5">
+        <select name="request" style="width:auto;" size="5">
             <option disabled>Requests to delete assign</option>
 
             <c:forEach items="${requestScope.requestsToDelete}" var="requestToDelete">
@@ -18,10 +18,15 @@
                 </option>
             </c:forEach>
         </select>
+        <br>
         <c:forEach var="i" begin="1" end="${requestScope.pagesCount}">
             <a href="controller?command=showActiveRequestsToDelete&page=${i}"><c:out value="${i}"/></a>
         </c:forEach>
+        <br>
         <input type="hidden" name="command" value="deleteAssign">
         <input type="submit" value="Delete assign">
+
+
+
     </form>
 </div>

@@ -1,12 +1,12 @@
 package dao.impl;
 
 import dao.interfaces.AssignmentDao;
-import datasource.Datasource;
+import datasource.ConnectionHolder;
+import datasource.TransactionManager;
 import entities.Assignment;
 import org.apache.log4j.Logger;
 import utils.PreparedStatementBuilder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,6 +41,18 @@ public class AssignmentDaoImpl implements AssignmentDao {
             + " SET " + COLUMN_IS_ACTIVE + " = false"
             + " WHERE " + COLUMN_USER_EMAIL_FK + " = ?"
             + " AND " + COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?";
+    private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+    private static final String SQL_SELECT_LIMIT_WHERE_CLAUSE = SQL_SELECT + " WHERE "
+            + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+    private static final String SQL_SELECT_LIMIT_FOR_USER = SQL_SELECT + " WHERE "
+            +COLUMN_USER_EMAIL_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT;
+    private static final String SQL_SELECT_COUNT_BY_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
+            + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+    private static final String SQL_SELECT_COUNT_FOR_USER ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
+            + " WHERE "+ COLUMN_USER_EMAIL_FK + " = ? "+ "AND " + COLUMN_IS_ACTIVE + " = ?";
+
+    private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private AssignmentDaoImpl() {}
 
@@ -99,11 +111,55 @@ public class AssignmentDaoImpl implements AssignmentDao {
     }
 
     @Override
+    public List<Assignment> findAssignmentsByLimit(int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
+    }
+
+    @Override
+    public List<Assignment> findAssignmentsByLimitWhereIsActive(boolean isActive, int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT_WHERE_CLAUSE, isActive, start, recordsPerPage);
+    }
+
+    @Override
+    public List<Assignment> findAssignmentsByLimitForUser(String email, boolean isActive, int currentPage, int recordsPerPage) throws Exception {
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        return findByVaryingParams(SQL_SELECT_LIMIT_FOR_USER, email, isActive, start, recordsPerPage);
+    }
+
+    @Override
+    public int getNumberForUser( String email, boolean isActive) throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT_FOR_USER, email, isActive);
+    }
+
+    @Override
+    public int getNumberByActive(boolean isActive) throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT_BY_ACTIVE, isActive);
+    }
+
+    @Override
+    public int getNumberOfRowsByParams(String sql, Object... params) throws Exception {
+        int numOfRows = 0;
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                numOfRows = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception in getNumberOfRows method of AssignmentDaoImpl class.");
+            throw new SQLException();
+        }
+        return numOfRows;
+    }
+
+    @Override
     public List<Assignment> findByVaryingParams(String sql, Object... params) throws Exception {
         ArrayList<Assignment> result = new ArrayList<>();
-        try (Connection connection = Datasource.getInstance().getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(sql),params);
-             ResultSet resultSet = statement.executeQuery()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Assignment assignment = new Assignment();
                 assignment.setAssignId(resultSet.getLong(COLUMN_ASSIGN_ID_PK));
@@ -122,10 +178,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void insertNewAssignment(Assignment assignment) throws Exception {
-
-        try(Connection  connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_INSERT_ASSIGNMENT),
-                    assignment.getActivityDescription(), assignment.getUserEmail())){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_ASSIGNMENT),
+                     assignment.getActivityDescription(), assignment.getUserEmail())) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in insertNewAssignment method of AssignmentDaoImpl class.");
@@ -135,9 +190,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void updateAssignmentTotalTime(Long assignId, Long totalTime) throws Exception {
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_UPDATE_ASSIGNMENT_SET_TIME),
-                totalTime, assignId)) {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_ASSIGNMENT_SET_TIME),
+                     totalTime, assignId)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in updateAssignmentTotalTime method of AssignmentDaoImpl class.");
@@ -147,9 +202,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public void setInactive(String email, String description) throws Exception {
-        try(Connection connection = Datasource.getInstance().getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connection.prepareStatement(SQL_UPDATE_SET_INACTIVE),
-                    email, description)) {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE),
+                     email, description)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.");
