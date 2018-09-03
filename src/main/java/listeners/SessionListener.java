@@ -5,6 +5,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
+/**
+ * @author Mirosha
+ */
+
 public class SessionListener implements HttpSessionAttributeListener {
 
     private static final Logger LOGGER = Logger.getLogger(SessionListener.class);

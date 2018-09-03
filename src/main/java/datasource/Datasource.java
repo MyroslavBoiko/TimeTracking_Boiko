@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * @author Mirosha
+ */
 public class Datasource {
 
     private static final Logger LOGGER = Logger.getLogger(Datasource.class);
@@ -18,12 +21,12 @@ public class Datasource {
 
     private DataSource dataSource;
 
-    private Datasource(){
+    private Datasource() {
         init();
     }
 
-    private void init(){
-        try{
+    private void init() {
+        try {
             /**
              * Get initial context that has references to all configurations and
              * resources defined for this web application.
@@ -38,28 +41,27 @@ public class Datasource {
              * Get the data source for the MySQL to request a connection.
              */
             dataSource = (DataSource) envContext.lookup("jdbc/time_tracking");
-        }catch (NamingException e){
+        } catch (NamingException e) {
             LOGGER.error("Naming exception in Datasource");
         }
     }
 
-    public static Datasource getInstance(){
-        if(instance == null){
+    public static Datasource getInstance() {
+        if (instance == null) {
             instance = new Datasource();
         }
         return instance;
     }
 
     /**
-     *
      * @return Connection from Connection pool
      */
     public Connection getConnection() {
         Connection connection = null;
         LOGGER.info("Return the object of DataSource class.");
-        try{
+        try {
             connection = dataSource.getConnection();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             LOGGER.error("Exception in getting connection");
         }
         return connection;

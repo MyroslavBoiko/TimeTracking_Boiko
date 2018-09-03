@@ -1,5 +1,9 @@
 package commands.utils;
 
+/**
+ * @author Mirosha
+ */
+
 public class Paginator {
 
     private int pagesCount;

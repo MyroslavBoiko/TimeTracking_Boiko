@@ -13,20 +13,24 @@ import services.interfaces.ActivitiesService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
 public class ActivitiesServiceImpl implements ActivitiesService {
 
     private static final Logger LOGGER = Logger.getLogger(ActivitiesServiceImpl.class);
 
     private static ActivitiesServiceImpl instance;
 
-    public static ActivitiesServiceImpl getInstance(){
-        if(instance == null){
+    public static ActivitiesServiceImpl getInstance() {
+        if (instance == null) {
             instance = new ActivitiesServiceImpl();
         }
         return instance;
     }
 
-    private ActivitiesServiceImpl(){}
+    private ActivitiesServiceImpl() {
+    }
 
     @Override
     public List<ActivityTranslate> getActivitiesPerPage(int currentPage, int recordsPerPage, String locale) {
@@ -48,7 +52,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
 
             return resultList;
         } catch (Exception e) {
-            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.", e);
         }
         return null;
     }
@@ -56,10 +60,10 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     @Override
     public int getCountOfRows() {
         ActivityDao activityDao = DaoFactory.createActivityDao();
-        try{
+        try {
             return activityDao.getNumberOfRows();
-        }catch (Exception e){
-            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+        } catch (Exception e) {
+            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.", e);
         }
         return 0;
     }

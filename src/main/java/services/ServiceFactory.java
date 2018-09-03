@@ -15,8 +15,9 @@ public class ServiceFactory {
 
     /**
      * Return Service instance in order to result of isTransaction method.
+     *
      * @param type Instance of service class.
-     * @param <T> Generic type which extends from Service interface
+     * @param <T>  Generic type which extends from Service interface
      * @return Service instance.
      */
     private static <T extends Service> T getService(T type) {
@@ -40,21 +41,28 @@ public class ServiceFactory {
         return getService(LoginServiceImpl.getInstance());
     }
 
-    public static RegistrationService getRegistrationService(){return getService(RegistrationServiceImpl.getInstance());}
+    public static RegistrationService getRegistrationService() {
+        return getService(RegistrationServiceImpl.getInstance());
+    }
 
-    public static RequestsService getRequestsService(){return getService(RequestsServiceImpl.getInstance());}
+    public static RequestsService getRequestsService() {
+        return getService(RequestsServiceImpl.getInstance());
+    }
 
-    public static UsersService getUsersService(){return getService(UsersServiceImpl.getInstance());}
+    public static UsersService getUsersService() {
+        return getService(UsersServiceImpl.getInstance());
+    }
 
     /**
      * Define the availability of Transaction class in clazz parameter.
+     *
      * @param clazz Class of type to be checked in the method.
      * @return Value describe the availability of Transaction class.
      */
     private static boolean isTransaction(Class clazz) {
         Method[] methods = clazz.getMethods();
-        for(Method m : methods){
-            if(m.isAnnotationPresent(Transaction.class)){
+        for (Method m : methods) {
+            if (m.isAnnotationPresent(Transaction.class)) {
                 return true;
             }
         }

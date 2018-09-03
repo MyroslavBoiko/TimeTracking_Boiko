@@ -11,13 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Mirosha
+ */
 public class RequestToDeleteCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page;
-        String[] temp = request.getParameter("request").split(":",2);
+        String[] temp = request.getParameter("request").split(":", 2);
         String description = temp[0].trim();
-        String email = ((User)request.getSession().getAttribute("user")).getEmail();
+        String email = ((User) request.getSession().getAttribute("user")).getEmail();
         RequestsService service = ServiceFactory.getRequestsService();
         service.createRequestToDelete(email, description);
         page = PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);

@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class ActivityDaoImpl implements ActivityDao {
 
     private static final Logger LOGGER = Logger.getLogger(ActivityDaoImpl.class);
@@ -87,7 +86,7 @@ public class ActivityDaoImpl implements ActivityDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of ActivityDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of ActivityDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -108,7 +107,7 @@ public class ActivityDaoImpl implements ActivityDao {
             }
             return result;
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of ActivityDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of ActivityDaoImpl class.", e);
             throw new SQLException();
         }
     }

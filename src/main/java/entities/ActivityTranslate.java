@@ -9,10 +9,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
  * @author Mirosha
  */
-
 public class ActivityTranslate implements Serializable {
 
     private Long translateId;

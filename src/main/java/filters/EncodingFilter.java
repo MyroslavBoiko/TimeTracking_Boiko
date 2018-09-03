@@ -5,7 +5,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.*;
 import java.io.IOException;
 
-public class EncodingFilter implements Filter{
+/**
+ * @author Mirosha
+ */
+public class EncodingFilter implements Filter {
 
     private static final Logger LOGGER = Logger.getLogger(EncodingFilter.class);
 

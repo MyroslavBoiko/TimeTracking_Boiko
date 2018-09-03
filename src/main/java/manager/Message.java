@@ -8,6 +8,9 @@ import org.apache.log4j.Logger;
 
 import java.util.ResourceBundle;
 
+/**
+ * @author Mirosha
+ */
 public class Message {
 
     private static final Logger LOGGER = Logger.getLogger(Message.class);

@@ -3,6 +3,9 @@ package utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Mirosha
+ */
 public class InputChecker {
 
     public static boolean checkNumber(String value) {
@@ -16,11 +19,13 @@ public class InputChecker {
         Matcher m = p.matcher(email);
         return m.matches();
     }
+
     public static boolean checkName(String name) {
         Pattern p = Pattern.compile("^\\p{L}+$");
         Matcher m = p.matcher(name);
         return m.matches();
     }
+
     public static boolean checkPassword(String password) {
         Pattern p = Pattern.compile("^[\\p{L}0-9]{6,}$");
         Matcher m = p.matcher(password);

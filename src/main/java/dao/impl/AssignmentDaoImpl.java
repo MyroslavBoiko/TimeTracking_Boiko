@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class AssignmentDaoImpl implements AssignmentDao {
 
     private static final Logger LOGGER = Logger.getLogger(AssignmentDaoImpl.class);
@@ -49,19 +48,20 @@ public class AssignmentDaoImpl implements AssignmentDao {
     private static final String SQL_SELECT_LIMIT_WHERE_CLAUSE = SQL_SELECT + " WHERE "
             + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
     private static final String SQL_SELECT_LIMIT_FOR_USER = SQL_SELECT + " WHERE "
-            +COLUMN_USER_EMAIL_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT;
-    private static final String SQL_SELECT_COUNT_BY_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
+            + COLUMN_USER_EMAIL_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT;
+    private static final String SQL_SELECT_COUNT_BY_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
-    private static final String SQL_SELECT_COUNT_FOR_USER ="SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
-            + " WHERE "+ COLUMN_USER_EMAIL_FK + " = ? " + "AND " + COLUMN_IS_ACTIVE + " = ?";
+    private static final String SQL_SELECT_COUNT_FOR_USER = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
+            + " WHERE " + COLUMN_USER_EMAIL_FK + " = ? " + "AND " + COLUMN_IS_ACTIVE + " = ?";
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private AssignmentDaoImpl() {}
+    private AssignmentDaoImpl() {
+    }
 
-    public static AssignmentDaoImpl getInstance(){
-        if(instance == null){
+    public static AssignmentDaoImpl getInstance() {
+        if (instance == null) {
             instance = new AssignmentDaoImpl();
         }
         return instance;
@@ -74,7 +74,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public Assignment findWhereAssignIdAndIsActiveEquals(Long assignId, boolean isActive) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT
                 + " WHERE " + COLUMN_ASSIGN_ID_PK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", assignId, isActive));
     }
 
@@ -82,7 +82,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     public Assignment findWhereEmailDescriptionActiveEquals(String email, String description, boolean isActive) throws Exception {
         return fetchSingleResult(findByVaryingParams(SQL_SELECT + " WHERE "
                 + COLUMN_USER_EMAIL_FK + " = ?"
-                + " AND " +  COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", email, description, isActive));
+                + " AND " + COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", email, description, isActive));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
     }
 
     @Override
-    public int getNumberForUser( String email, boolean isActive) throws Exception {
+    public int getNumberForUser(String email, boolean isActive) throws Exception {
         return getNumberOfRowsByParams(SQL_SELECT_COUNT_FOR_USER, email, isActive);
     }
 
@@ -128,7 +128,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -150,7 +150,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
                 result.add(assignment);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
         return result;
@@ -163,7 +163,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
                      assignment.getActivityDescription(), assignment.getUserEmail())) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewAssignment method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in insertNewAssignment method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
     }
@@ -175,7 +175,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
                      totalTime, assignId)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in updateAssignmentTotalTime method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in updateAssignmentTotalTime method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
     }
@@ -187,13 +187,13 @@ public class AssignmentDaoImpl implements AssignmentDao {
                      email, description)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
     private Assignment fetchSingleResult(List<Assignment> assignments) {
-        if(assignments.size() > 0){
+        if (assignments.size() > 0) {
             return assignments.remove(0);
         }
         return null;

@@ -7,6 +7,9 @@ import utils.TransactionalInvocationHandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
+/**
+ * @author Mirosha
+ */
 public class ProxyService<T> implements Service {
     private Object proxy;
 

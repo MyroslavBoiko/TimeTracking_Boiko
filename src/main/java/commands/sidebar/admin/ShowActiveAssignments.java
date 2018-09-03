@@ -12,11 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
 public class ShowActiveAssignments implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page;
-        String lang = (String)request.getSession().getAttribute("language");
+        String lang = (String) request.getSession().getAttribute("language");
         AssignmentsService service = ServiceFactory.getAssignmentsService();
         List<Assignment> assignments = service.getActiveAssignments(lang);
         request.setAttribute("assignments", assignments);

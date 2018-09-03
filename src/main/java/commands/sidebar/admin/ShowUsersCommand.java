@@ -1,6 +1,5 @@
 package commands.sidebar.admin;
 
-import com.sun.org.apache.regexp.internal.RE;
 import commands.Command;
 import commands.utils.Paginator;
 import entities.User;
@@ -14,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
 public class ShowUsersCommand implements Command {
 
     @Override
@@ -23,13 +25,13 @@ public class ShowUsersCommand implements Command {
         UsersService service = ServiceFactory.getUsersService();
         Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
         String pageParameter = request.getParameter("page");
-        if(pageParameter != null){
+        if (pageParameter != null) {
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
         List<User> users = service.getUsersPerPage(paginator.getCurrentPage(), recordsPerPage);
         request.setAttribute("users", users);
         request.setAttribute("pagesCount", paginator.getPagesCount());
-        page =  PagesJsp.getInstance().getProperty(PagesJsp.USERS_DATA);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.USERS_DATA);
         request.setAttribute("currentPage", page);
         return page;
     }

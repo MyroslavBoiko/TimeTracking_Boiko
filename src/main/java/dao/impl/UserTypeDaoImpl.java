@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class UserTypeDaoImpl implements UserTypeDao {
 
     private static final Logger LOGGER = Logger.getLogger(UserTypeDaoImpl.class);
@@ -37,14 +36,15 @@ public class UserTypeDaoImpl implements UserTypeDao {
             + "VALUES (?)";
 
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM" + TABLE_USER_TYPE;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM" + TABLE_USER_TYPE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private UserTypeDaoImpl(){}
+    private UserTypeDaoImpl() {
+    }
 
-    public static UserTypeDaoImpl getInstance(){
-        if(instance == null){
+    public static UserTypeDaoImpl getInstance() {
+        if (instance == null) {
             instance = new UserTypeDaoImpl();
         }
         return instance;
@@ -63,14 +63,14 @@ public class UserTypeDaoImpl implements UserTypeDao {
 
     @Override
     public UserType findWhereTypeNameEquals(String typeName) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE "+ COLUMN_TYPE_NAME + " = ?", typeName));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT
+                + " WHERE " + COLUMN_TYPE_NAME + " = ?", typeName));
     }
 
 
     @Override
     public int getNumberOfRows() throws Exception {
-       return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class UserTypeDaoImpl implements UserTypeDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of UserTypeDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of UserTypeDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -102,14 +102,14 @@ public class UserTypeDaoImpl implements UserTypeDao {
                 result.add(userType);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of UserTypeDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of UserTypeDaoImpl class.", e);
             throw new SQLException();
         }
         return result;
     }
 
     private UserType fetchSingleResult(List<UserType> userTypes) {
-        if(userTypes.size() > 0){
+        if (userTypes.size() > 0) {
             return userTypes.remove(0);
         }
         return null;

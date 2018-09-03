@@ -7,6 +7,9 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
+/**
+ * @author Mirosha
+ */
 public class UserTag extends TagSupport {
 
     private static final Logger LOGGER = Logger.getLogger(UserTag.class);
@@ -24,10 +27,11 @@ public class UserTag extends TagSupport {
 
     @Override
     public int doStartTag() {
-        try{
+        LOGGER.debug("UserTag execution");
+        try {
             JspWriter out = pageContext.getOut();
             out.write(firstname + " " + lastname);
-        }catch (IOException e){
+        } catch (IOException e) {
             LOGGER.error("IO Exception in custom tag.");
         }
         return SKIP_BODY;

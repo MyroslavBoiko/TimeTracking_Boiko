@@ -7,20 +7,24 @@ import entities.User;
 import org.apache.log4j.Logger;
 import services.interfaces.RegistrationService;
 
+/**
+ * @author Mirosha
+ */
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final Logger LOGGER = Logger.getLogger(RegistrationServiceImpl.class);
 
     private static RegistrationServiceImpl instance;
 
-    public static RegistrationServiceImpl getInstance(){
-        if(instance == null){
+    public static RegistrationServiceImpl getInstance() {
+        if (instance == null) {
             instance = new RegistrationServiceImpl();
         }
         return instance;
     }
 
-    private RegistrationServiceImpl(){}
+    private RegistrationServiceImpl() {
+    }
 
     @Override
     public boolean performRegistration(User user) {
@@ -31,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             userDao.insertNewUser(user);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception in performRegistration method.");
+            LOGGER.error("Exception in performRegistration method.", e);
         }
         return false;
     }

@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
 
     private static final Logger LOGGER = Logger.getLogger(ActivityTranslateDaoImpl.class);
@@ -49,14 +48,15 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
     private static final String SQL_SELECT_BY_ACTIVITY_ID = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_ACTIVITY_TRANSLATE;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ACTIVITY_TRANSLATE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private ActivityTranslateDaoImpl() {}
+    private ActivityTranslateDaoImpl() {
+    }
 
-    public static ActivityTranslateDaoImpl getInstance(){
-        if(instance == null){
+    public static ActivityTranslateDaoImpl getInstance() {
+        if (instance == null) {
             instance = new ActivityTranslateDaoImpl();
         }
         return instance;
@@ -92,7 +92,7 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of ActivityTranslateDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of ActivityTranslateDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -104,7 +104,7 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
              PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 ActivityTranslate activityTranslate = new ActivityTranslate();
                 activityTranslate.setTranslateId(resultSet.getLong(COLUMN_TRANSLATE_ID_PK));
                 activityTranslate.setLanguageId(resultSet.getLong(COLUMN_LANGUAGE_ID_FK));
@@ -113,14 +113,14 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
                 result.add(activityTranslate);
             }
             return result;
-        }catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of ActivityTranslateDaoImpl class.");
+        } catch (SQLException e) {
+            LOGGER.error("Exception in findByVaryingParams method of ActivityTranslateDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
-   private ActivityTranslate fetchSingleResult(List<ActivityTranslate> activityTranslates) {
-        if(activityTranslates.size() > 0){
+    private ActivityTranslate fetchSingleResult(List<ActivityTranslate> activityTranslates) {
+        if (activityTranslates.size() > 0) {
             return activityTranslates.remove(0);
         }
         return null;

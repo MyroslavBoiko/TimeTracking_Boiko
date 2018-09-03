@@ -9,10 +9,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
  * @author Mirosha
  */
-
 public class Assignment implements Serializable {
 
     private Long assignId;
@@ -63,7 +61,6 @@ public class Assignment implements Serializable {
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
-
 
 
     @Override

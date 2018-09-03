@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 /**
  * @author Mirosha
  */
-
 @Target(value= ElementType.METHOD)
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface Transaction {

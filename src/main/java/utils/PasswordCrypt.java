@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * @author Mirosha
+ */
 public class PasswordCrypt {
 
     private static final Logger LOGGER = Logger.getLogger(PasswordCrypt.class);
@@ -17,7 +20,7 @@ public class PasswordCrypt {
         try {
             algorithm = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.warn("NoSuchAlgorithmException in password encryption.");
+            LOGGER.warn("NoSuchAlgorithmException in password encryption.", e);
         }
         algorithm.reset();
         algorithm.update(buf);

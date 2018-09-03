@@ -14,24 +14,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
 public class ShowActivitiesCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page;
+        String page = null;
         final int recordsPerPage = 5;
         ActivitiesService service = ServiceFactory.getActivitiesService();
         Paginator paginator = new Paginator(service.getCountOfRows(), recordsPerPage);
         String pageParameter = request.getParameter("page");
-        if(pageParameter != null){
+        if (pageParameter != null) {
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        System.out.println((String)request.getSession().getAttribute("language"));
         List<ActivityTranslate> activities = service.getActivitiesPerPage(paginator.getCurrentPage(),
                 recordsPerPage,
-                (String)request.getSession().getAttribute("language"));
+                (String) request.getSession().getAttribute("language"));
         request.getSession().setAttribute("activities", activities);
         request.getSession().setAttribute("pagesCount", paginator.getPagesCount());
-        page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        String type = (String)request.getSession().getAttribute("type");
+        if(type.equalsIgnoreCase("Client")){
+            page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
+        }else if(type.equalsIgnoreCase("Admin")){
+            page = PagesJsp.getInstance().getProperty(PagesJsp.SHOW_ACTIVITIES_ADMIN);
+        }
         request.setAttribute("currentPage", page);
         return page;
     }

@@ -9,10 +9,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
  * @author Mirosha
  */
-
 public class RequestToAdd implements Serializable {
 
     private Long addId;

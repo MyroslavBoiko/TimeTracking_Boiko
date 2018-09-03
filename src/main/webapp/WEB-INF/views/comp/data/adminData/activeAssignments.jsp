@@ -25,8 +25,5 @@
         <br>
         <input type="hidden" name="command" value="adminPage">
         <input id="btnEnable" type="submit" value="<fmt:message key="return" bundle="${locale}"/>">
-
-
-
     </form>
 </div>

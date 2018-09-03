@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * @author Mirosha
+ */
 public class PreparedStatementBuilder {
 
     private static Logger LOGGER = Logger.getLogger(PreparedStatementBuilder.class);

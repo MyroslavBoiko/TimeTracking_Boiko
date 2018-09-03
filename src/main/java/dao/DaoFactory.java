@@ -6,36 +6,37 @@ import dao.interfaces.*;
 /**
  * @author Mirosha
  */
-
 public class DaoFactory {
 
-    public static UserTypeDao createUserTypeDao(){
+    public static UserTypeDao createUserTypeDao() {
         return UserTypeDaoImpl.getInstance();
     }
 
-    public static UserDao createUserDao(){
+    public static UserDao createUserDao() {
         return UserDaoImpl.getInstance();
     }
 
-    public static AssignmentDao createAssignmentDao(){
+    public static AssignmentDao createAssignmentDao() {
         return AssignmentDaoImpl.getInstance();
     }
 
-    public static RequestToAddDao createRequestToAddDao(){
+    public static RequestToAddDao createRequestToAddDao() {
         return RequestToAddDaoImpl.getInstance();
     }
 
-    public static RequestToDeleteDao createRequestToDeleteDao(){
+    public static RequestToDeleteDao createRequestToDeleteDao() {
         return RequestToDeleteDaoImpl.getInstance();
     }
 
-    public static ActivityDao createActivityDao(){
+    public static ActivityDao createActivityDao() {
         return ActivityDaoImpl.getInstance();
     }
 
-    public static ActivityTranslateDao createActivityTranslateDao(){ return ActivityTranslateDaoImpl.getInstance(); }
+    public static ActivityTranslateDao createActivityTranslateDao() {
+        return ActivityTranslateDaoImpl.getInstance();
+    }
 
-    public static LanguageDao createLanguageDao(){
+    public static LanguageDao createLanguageDao() {
         return LanguageDaoImpl.getInstance();
     }
 }

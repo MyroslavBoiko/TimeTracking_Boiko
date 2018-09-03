@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
+/**
+ * @author Mirosha
+ */
 public class ControllerHelper {
 
     private static final Logger LOGGER = Logger.getLogger(ControllerHelper.class);
@@ -16,7 +19,7 @@ public class ControllerHelper {
     private static ControllerHelper instance = null;
     private HashMap<String, Command> commands = new HashMap<>();
 
-    private ControllerHelper(){
+    private ControllerHelper() {
         LOGGER.info("Initializing of commands.");
 
         commands.put("login", new LoginCommand());
@@ -31,6 +34,7 @@ public class ControllerHelper {
 
         commands.put("showUsers", new ShowUsersCommand());
         commands.put("showActivities", new ShowActivitiesCommand());
+        commands.put("showActivitiesAdmin", new ShowActivitiesCommand());
         commands.put("createAssign", new CreateAssignCommand());
         commands.put("deleteAssign", new DeleteAssignCommand());
         commands.put("showActiveRequestsToAdd", new ShowRequestsToAddCommand());
@@ -48,14 +52,14 @@ public class ControllerHelper {
 
     }
 
-    public static ControllerHelper getInstance(){
-        if(instance == null){
+    public static ControllerHelper getInstance() {
+        if (instance == null) {
             instance = new ControllerHelper();
         }
         return instance;
     }
 
-    public Command getCommand(HttpServletRequest request){
+    public Command getCommand(HttpServletRequest request) {
         Command command = commands.get(request.getParameter("command"));
         if (command == null) {
             command = new NoCommand();

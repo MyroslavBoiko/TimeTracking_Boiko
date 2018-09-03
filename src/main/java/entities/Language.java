@@ -10,10 +10,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- *
  * @author Mirosha
  */
-
 public class Language implements Serializable {
 
     private Long languageId;

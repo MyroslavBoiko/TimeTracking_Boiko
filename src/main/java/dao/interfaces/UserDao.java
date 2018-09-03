@@ -7,11 +7,11 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public interface UserDao {
 
     /**
      * Method which gets all User items from Database.
+     *
      * @return List of User items.
      * @throws Exception Throws an exception which may occur while working with Database.
      */
@@ -19,6 +19,7 @@ public interface UserDao {
 
     /**
      * Method which gets User item with specified parameter from Database.
+     *
      * @param userId The specified Id of item in Database.
      * @return User item.
      * @throws Exception Throws an exception which may occur while working with Database.
@@ -27,6 +28,7 @@ public interface UserDao {
 
     /**
      * Method which gets all User items with specified parameter from Database.
+     *
      * @param email The specified email parameter of item in Database.
      * @return User item with specified email parameter.
      * @throws Exception Throws an exception which may occur while working with Database.
@@ -35,7 +37,8 @@ public interface UserDao {
 
     /**
      * Method which gets all User items with varying list of parameters from Database.
-     * @param sql SQL statement for working with Database
+     *
+     * @param sql    SQL statement for working with Database
      * @param params List of parameters which are used to find items in Database
      * @return List of User items.
      * @throws Exception Throws an exception which may occur while working with Database.
@@ -44,7 +47,8 @@ public interface UserDao {
 
     /**
      * Method which gets all User items for current page of representation from Database.
-     * @param currentPage Number of current page of representation items.
+     *
+     * @param currentPage    Number of current page of representation items.
      * @param recordsPerPage Max number of records per page.
      * @return List of User items.
      * @throws Exception Throws an exception which may occur while working with Database.
@@ -53,6 +57,7 @@ public interface UserDao {
 
     /**
      * Method which gets number of all items in Database.
+     *
      * @return Number of rows of items.
      * @throws Exception Throws an exception which may occur while working with Database.
      */
@@ -60,7 +65,8 @@ public interface UserDao {
 
     /**
      * Number of rows with specified parameters.
-     * @param sql SQL statement which are used to work with Database.
+     *
+     * @param sql    SQL statement which are used to work with Database.
      * @param params List of parameters to use by SQL.
      * @return Number of specified rows.
      * @throws Exception Throws an exception which may occur while working with Database.
@@ -69,6 +75,7 @@ public interface UserDao {
 
     /**
      * Inserts new User item into Database.
+     *
      * @param user Item to add into Database.
      * @throws Exception Throws an exception which may occur while working with Database.
      */

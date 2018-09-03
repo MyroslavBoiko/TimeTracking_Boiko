@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * @author Mirosha
+ */
 public class Controller extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(Controller.class);
@@ -29,11 +32,11 @@ public class Controller extends HttpServlet {
 
     private void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = null;
-        try{
+        try {
             Command command = ControllerHelper.getInstance().getCommand(request);
             page = command.execute(request, response);
-        }catch (ServletException | IOException e){
-            LOGGER.error("Exception in servlet method.");
+        } catch (ServletException | IOException e) {
+            LOGGER.error("Exception in servlet method.", e);
         }
         request.setAttribute("currentPage", page);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);

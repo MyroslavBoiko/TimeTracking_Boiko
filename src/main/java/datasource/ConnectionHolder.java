@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * @author Mirosha
+ */
 public class ConnectionHolder implements AutoCloseable {
 
     private final Connection connection;

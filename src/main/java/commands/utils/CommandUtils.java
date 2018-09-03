@@ -10,6 +10,9 @@ import utils.InputChecker;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * @author Mirosha
+ */
 public class CommandUtils {
 
     private static final Logger LOGGER = Logger.getLogger(CommandUtils.class);
@@ -19,39 +22,39 @@ public class CommandUtils {
         session.setAttribute("type", type);
     }
 
-    public static boolean checkRegisterFields(HttpServletRequest request, String email, String password, String firstName, String lastName){
+    public static boolean checkRegisterFields(HttpServletRequest request, String email, String password, String firstName, String lastName) {
         boolean result = true;
-        if(!InputChecker.checkEmail(email)){
+        if (!InputChecker.checkEmail(email)) {
             request.setAttribute("emailError", Message.EMAIL_ERROR);
             result = false;
-        }else{
+        } else {
             UserDao userDao = DaoFactory.createUserDao();
-            try{
-                if(userDao.findWhereEmailEquals(email) == null){
+            try {
+                if (userDao.findWhereEmailEquals(email) == null) {
                     request.setAttribute("emailHold", email);
-                }else {
+                } else {
                     request.setAttribute("emailError", Message.USED_EMAIL_ERROR);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 LOGGER.error(e);
             }
 
 
         }
-        if(!InputChecker.checkPassword(password)){
+        if (!InputChecker.checkPassword(password)) {
             request.setAttribute("passwordError", Message.PASSWORD_ERROR);
             result = false;
         }
-        if(!InputChecker.checkName(firstName)){
+        if (!InputChecker.checkName(firstName)) {
             request.setAttribute("firstNameError", Message.FIRST_NAME_ERROR);
             result = false;
-        }else {
+        } else {
             request.setAttribute("firstNameHold", firstName);
         }
-        if(!InputChecker.checkName(lastName)){
+        if (!InputChecker.checkName(lastName)) {
             request.setAttribute("lastNameError", Message.LAST_NAME_ERROR);
             result = false;
-        }else {
+        } else {
             request.setAttribute("lastNameHold", lastName);
         }
         return result;

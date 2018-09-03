@@ -6,6 +6,9 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author Mirosha
+ */
 public class RequestListener implements ServletRequestListener {
 
     private static final Logger LOGGER = Logger.getLogger(RequestListener.class);
@@ -14,7 +17,7 @@ public class RequestListener implements ServletRequestListener {
     public void requestDestroyed(ServletRequestEvent sre) {
         HttpServletRequest req = (HttpServletRequest) sre.getServletRequest();
         String uri = "Request Destroyed for " + req.getRequestURI();
-        String id = "Request Destroyed with ID="+ req.getRequestedSessionId();
+        String id = "Request Destroyed with ID=" + req.getRequestedSessionId();
         LOGGER.info(uri + ":" + id);
     }
 
@@ -22,7 +25,7 @@ public class RequestListener implements ServletRequestListener {
     public void requestInitialized(ServletRequestEvent sre) {
         HttpServletRequest req = (HttpServletRequest) sre.getServletRequest();
         String uri = "Request Initialized for " + req.getRequestURI();
-        String id = "Request Initialized with ID="+ req.getRequestedSessionId();
+        String id = "Request Initialized with ID=" + req.getRequestedSessionId();
         LOGGER.info(uri + ":" + id);
     }
 }

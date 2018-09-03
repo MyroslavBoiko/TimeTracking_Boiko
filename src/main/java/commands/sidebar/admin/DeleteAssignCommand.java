@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Mirosha
+ */
 public class DeleteAssignCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -18,7 +21,7 @@ public class DeleteAssignCommand implements Command {
         String[] info = element.split(" ", 2);
         AssignmentsService service = ServiceFactory.getAssignmentsService();
         service.setAssignInactive(info[0], info[1]);
-        page =  PagesJsp.getInstance().getProperty(PagesJsp.ADMIN);
+        page = PagesJsp.getInstance().getProperty(PagesJsp.ADMIN);
         request.setAttribute("currentPage", page);
         return page;
     }

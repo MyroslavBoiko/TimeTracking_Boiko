@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class RequestToAddDaoImpl implements RequestToAddDao {
 
     private static final Logger LOGGER = Logger.getLogger(RequestToAddDaoImpl.class);
@@ -44,16 +43,17 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
             + COLUMN_ACTIVITY_ID_FK + " = ?";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
     private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD;
-    private static final String SQL_SELECT_COUNT_IS_ACTIVE ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD;
+    private static final String SQL_SELECT_COUNT_IS_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private RequestToAddDaoImpl() {}
+    private RequestToAddDaoImpl() {
+    }
 
-    public static RequestToAddDaoImpl getInstance(){
-        if(instance == null){
+    public static RequestToAddDaoImpl getInstance() {
+        if (instance == null) {
             instance = new RequestToAddDaoImpl();
         }
         return instance;
@@ -72,14 +72,14 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     @Override
     public RequestToAdd findWhereActivityIdAndUserIdEquals(Long activityId, Long userId, boolean isActive) throws Exception {
         return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?"
-                + " AND " + COLUMN_USER_ID_FK + " = ?"
-                + " AND " + COLUMN_IS_ACTIVE + " = ?",
+                        + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?"
+                        + " AND " + COLUMN_USER_ID_FK + " = ?"
+                        + " AND " + COLUMN_IS_ACTIVE + " = ?",
                 activityId, userId, isActive));
     }
 
     @Override
-    public List<RequestToAdd> findRequestsToAddIsActiveByLimit( boolean isActive, int currentPage, int recordsPerPage) throws Exception {
+    public List<RequestToAdd> findRequestsToAddIsActiveByLimit(boolean isActive, int currentPage, int recordsPerPage) throws Exception {
         int start = currentPage * recordsPerPage - recordsPerPage;
         return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE, isActive, start, recordsPerPage);
     }
@@ -104,7 +104,7 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of RequestToAddDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of RequestToAddDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -116,7 +116,7 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
              PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
              ResultSet resultSet = statement.executeQuery()) {
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 RequestToAdd requestToAdd = new RequestToAdd();
                 requestToAdd.setAddId(resultSet.getLong(COLUMN_ADD_ID_PK));
                 requestToAdd.setActivityId(resultSet.getLong(COLUMN_ACTIVITY_ID_FK));
@@ -125,38 +125,38 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
                 result.add(requestToAdd);
             }
             return result;
-        }catch (SQLException e){
-            LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.");
+        } catch (SQLException e) {
+            LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
     @Override
     public void insertNewRequestToAdd(RequestToAdd requestToAdd) throws Exception {
-        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_REQUEST_TO_ADD),
-                    requestToAdd.getActivityId(), requestToAdd.getUserId())){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_REQUEST_TO_ADD),
+                     requestToAdd.getActivityId(), requestToAdd.getUserId())) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewRequestToAdd method of RequestToDeleteDaoImpl class.");
+            LOGGER.error("Exception in insertNewRequestToAdd method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
     @Override
     public void setInactiveRequestToAdd(Long activityId, Long userId) throws Exception {
-            try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-                 PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE),
-                         userId, activityId)) {
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE),
+                     userId, activityId)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in setInactiveRequestToAdd method of RequestToDeleteDaoImpl class.");
+            LOGGER.error("Exception in setInactiveRequestToAdd method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
     private RequestToAdd fetchSingleResult(List<RequestToAdd> requestToAdds) {
-        if(requestToAdds.size() > 0){
+        if (requestToAdds.size() > 0) {
             return requestToAdds.remove(0);
         }
         return null;

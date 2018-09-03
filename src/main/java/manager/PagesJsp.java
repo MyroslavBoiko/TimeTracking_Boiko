@@ -8,6 +8,9 @@ import org.apache.log4j.Logger;
 
 import java.util.ResourceBundle;
 
+/**
+ * @author Mirosha
+ */
 public class PagesJsp {
 
     private static final Logger LOGGER = Logger.getLogger(PagesJsp.class);
@@ -30,6 +33,8 @@ public class PagesJsp {
     public static final String ACTIVE_ASSIGNMENTS = "ACTIVE_ASSIGNMENTS";
     public static final String ASSIGNMENTS_TO_DELETE = "ASSIGNMENTS_TO_DELETE";
     public static final String REQUESTS_TO_DELETE = "REQUESTS_TO_DELETE";
+    public static final String SHOW_ACTIVITIES_ADMIN = "SHOW_ACTIVITIES_ADMIN";
+
 
     public static PagesJsp getInstance() {
         if (instance == null) {

@@ -12,17 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Mirosha
+ */
 public class CreateRequestCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page;
         RequestsService service = ServiceFactory.getRequestsService();
-        User user = (User)request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         String description = request.getParameter("description");
-        if(service.checkUsedActivity(user, description)){
-            service.createRequest(user,description);
+        if (service.checkUsedActivity(user, description)) {
+            service.createRequest(user, description);
             page = PagesJsp.getInstance().getProperty(PagesJsp.CLIENT);
-        }else {
+        } else {
             request.setAttribute("errorMessage", Message.USED_ACTIVITY_ERROR);
             page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVITIES_DATA);
         }

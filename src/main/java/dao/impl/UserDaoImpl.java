@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class UserDaoImpl implements UserDao {
 
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
@@ -38,7 +37,7 @@ public class UserDaoImpl implements UserDao {
             + COLUMN_LAST_NAME + ") "
             + "VALUES (?,?,?,?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_USER;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_USER;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
@@ -90,7 +89,7 @@ public class UserDaoImpl implements UserDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of UserDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of UserDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -99,9 +98,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findByVaryingParams(String sql, Object... params) throws Exception {
         List<User> result = new ArrayList<>();
-        try(ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-            PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
-            ResultSet resultSet = statement.executeQuery()){
+        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
+             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(sql), params);
+             ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
                 User user = new User();
@@ -114,7 +113,7 @@ public class UserDaoImpl implements UserDao {
                 result.add(user);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of UserDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of UserDaoImpl class.", e);
             throw new SQLException();
         }
         return result;
@@ -128,7 +127,7 @@ public class UserDaoImpl implements UserDao {
                      user.getUserTypeId(), user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName())) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewUser method of UserDaoImpl class.");
+            LOGGER.error("Exception in insertNewUser method of UserDaoImpl class.", e);
             throw new SQLException();
         }
     }

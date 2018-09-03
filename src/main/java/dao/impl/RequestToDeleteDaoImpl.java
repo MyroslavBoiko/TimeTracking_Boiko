@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
 
     private static final Logger LOGGER = Logger.getLogger(RequestToDeleteDaoImpl.class);
@@ -39,16 +38,19 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
             + "VALUES (?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
     private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
+    private static final String SQL_SELECT_COUNT_IS_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE
+            + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
     private static final String SQL_UPDATE_SET_INACTIVE = "UPDATE " + TABLE_REQUEST_TO_DELETE
             + " SET " + COLUMN_IS_ACTIVE + " = false"
             + " WHERE " + COLUMN_ASSIGN_ID_FK + " = ?";
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private RequestToDeleteDaoImpl() {}
+    private RequestToDeleteDaoImpl() {
+    }
 
-    public static RequestToDeleteDaoImpl getInstance(){
-        if(instance == null){
+    public static RequestToDeleteDaoImpl getInstance() {
+        if (instance == null) {
             instance = new RequestToDeleteDaoImpl();
         }
         return instance;
@@ -67,12 +69,17 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     @Override
     public List<RequestToDelete> findRequestsToDeleteIsActiveByLimit(boolean isActive, int currentPage, int recordsPerPage) throws Exception {
         int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE,isActive, start, recordsPerPage);
+        return findByVaryingParams(SQL_SELECT_LIMIT_ACTIVE, isActive, start, recordsPerPage);
     }
 
     @Override
     public int getNumberOfRows() throws Exception {
         return getNumberOfRowsByParams(SQL_SELECT_COUNT);
+    }
+
+    @Override
+    public int getNumberByActive(boolean isActive) throws Exception {
+        return getNumberOfRowsByParams(SQL_SELECT_COUNT_IS_ACTIVE, isActive);
     }
 
     @Override
@@ -85,7 +92,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of RequestToDeleteDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -107,7 +114,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
                 result.add(requestToDelete);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
         return result;
@@ -120,7 +127,7 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
                      requestToDelete.getAssignId(), requestToDelete.getUserId())) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewRequestToDelete method of RequestToDeleteDaoImpl class.");
+            LOGGER.error("Exception in insertNewRequestToDelete method of RequestToDeleteDaoImpl class.", e);
             throw new SQLException();
         }
     }
@@ -129,16 +136,16 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     public void setInactive(Long assignId) throws Exception {
         try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
              PreparedStatement statement =
-                     PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE),assignId)) {
+                     PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_UPDATE_SET_INACTIVE), assignId)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.");
+            LOGGER.error("Exception in setInactive method of AssignmentDaoImpl class.", e);
             throw new SQLException();
         }
     }
 
     private RequestToDelete fetchSingleResult(List<RequestToDelete> requestToDeletes) {
-        if(requestToDeletes.size() > 0){
+        if (requestToDeletes.size() > 0) {
             return requestToDeletes.remove(0);
         }
         return null;

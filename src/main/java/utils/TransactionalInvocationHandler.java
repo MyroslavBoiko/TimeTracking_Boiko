@@ -7,6 +7,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+/**
+ * @author Mirosha
+ */
 public class TransactionalInvocationHandler implements InvocationHandler {
 
     private TransactionManager transactionManager = TransactionManager.getInstance();
@@ -22,9 +25,9 @@ public class TransactionalInvocationHandler implements InvocationHandler {
         if (isTransactional(method)) {
             transactionManager.startTransaction();
             Object result = method.invoke(target, args);
-            if(Objects.isNull(result) || (boolean)result){
+            if (Objects.isNull(result) || (boolean) result) {
                 transactionManager.commit(true);
-            }else {
+            } else {
                 transactionManager.commit(false);
             }
             return result;

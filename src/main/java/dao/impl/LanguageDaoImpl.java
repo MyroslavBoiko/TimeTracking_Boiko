@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * @author Mirosha
  */
-
 public class LanguageDaoImpl implements LanguageDao {
 
     private static final Logger LOGGER = Logger.getLogger(LanguageDaoImpl.class);
@@ -37,14 +36,15 @@ public class LanguageDaoImpl implements LanguageDao {
             + COLUMN_LANGUAGE_CODE + ") "
             + "VALUES (?,?)";
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
-    private static final String SQL_SELECT_COUNT ="SELECT COUNT(*) FROM " + TABLE_LANGUAGE;
+    private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_LANGUAGE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
-    private LanguageDaoImpl(){}
+    private LanguageDaoImpl() {
+    }
 
-    public static LanguageDaoImpl getInstance(){
-        if(instance == null){
+    public static LanguageDaoImpl getInstance() {
+        if (instance == null) {
             instance = new LanguageDaoImpl();
         }
         return instance;
@@ -57,7 +57,7 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public Language findWhereLanguageCodeEquals(String languageCode) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT
                 + " WHERE " + COLUMN_LANGUAGE_CODE + " = ?", languageCode));
     }
 
@@ -76,7 +76,7 @@ public class LanguageDaoImpl implements LanguageDao {
                 numOfRows = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in getNumberOfRows method of LanguageDaoDaoImpl class.");
+            LOGGER.error("Exception in getNumberOfRows method of LanguageDaoDaoImpl class.", e);
             throw new SQLException();
         }
         return numOfRows;
@@ -96,14 +96,14 @@ public class LanguageDaoImpl implements LanguageDao {
                 result.add(language);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception in findByVaryingParams method of LanguageDaoImpl class.");
+            LOGGER.error("Exception in findByVaryingParams method of LanguageDaoImpl class.", e);
             throw new SQLException();
         }
         return result;
     }
 
     private Language fetchSingleResult(List<Language> languages) {
-        if(languages.size() > 0){
+        if (languages.size() > 0) {
             return languages.remove(0);
         }
         return null;

@@ -12,7 +12,6 @@ import java.util.Objects;
 /**
  * @author Mirosha
  */
-
 public class Activity implements Serializable {
 
     private Long activityId;

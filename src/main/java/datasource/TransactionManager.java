@@ -19,7 +19,7 @@ public class TransactionManager {
     }
 
     public static TransactionManager getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new TransactionManager();
         }
         return instance;
@@ -28,6 +28,7 @@ public class TransactionManager {
     /**
      * Provide connection to Database if not exists,
      * or invoke method to provide connection for currentConnection variable.
+     *
      * @return Connection to Database
      */
     public ConnectionHolder getConnection() {
@@ -40,6 +41,7 @@ public class TransactionManager {
 
     /**
      * Starts transaction for currentConnection.
+     *
      * @return Conection with active transaction.
      */
     public ConnectionHolder startTransaction() {
@@ -52,6 +54,7 @@ public class TransactionManager {
     /**
      * Commit transaction if success is true,
      * or rollback if success is false
+     *
      * @param success State of transaction success.
      */
     public void commit(boolean success) {
@@ -60,10 +63,10 @@ public class TransactionManager {
         }
         currentConnection.get().setTransactionActive(false);
         try {
-            if(success){
+            if (success) {
                 currentConnection.get().commit();
-            }else {
-                LOGGER.info("Transaction is being rolled back");
+            } else {
+                LOGGER.info("Transaction rolled back");
                 currentConnection.get().rollback();
             }
         } catch (SQLException e) {
@@ -82,6 +85,7 @@ public class TransactionManager {
     /**
      * Return connection from ThreadLocal variable,
      * or provide new connection and starts transaction.
+     *
      * @return Connection to Database,
      */
     private ConnectionHolder provideConnection() {

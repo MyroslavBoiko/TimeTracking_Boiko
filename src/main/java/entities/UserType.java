@@ -10,10 +10,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- *
  * @author Mirosha
  */
-
 public class UserType implements Serializable {
 
     private Long userTypeId;
