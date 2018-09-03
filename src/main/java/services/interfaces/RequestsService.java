@@ -8,6 +8,10 @@ import javafx.util.Pair;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public interface RequestsService extends Service {
 
     boolean createRequest(User user, String description);

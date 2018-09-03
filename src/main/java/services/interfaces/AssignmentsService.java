@@ -5,6 +5,10 @@ import entities.User;
 
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public interface AssignmentsService extends Service {
 
     List<Assignment> getActiveAssignments(String language);

@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class RequestToAddDaoImpl implements RequestToAddDao {
 
     private static final Logger LOGGER = Logger.getLogger(RequestToAddDaoImpl.class);
@@ -61,22 +65,6 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
     }
 
     @Override
-    public RequestToAdd findWhereAddIdEquals(Long addId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ADD_ID_PK + " = ?", addId));
-    }
-
-    @Override
-    public List<RequestToAdd> findWhereActivityIdEquals(Long activityId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?", activityId);
-    }
-
-    @Override
-    public List<RequestToAdd> findWhereUserIdEquals(Long userId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE" + COLUMN_USER_ID_FK + " = ?", userId);
-    }
-
-    @Override
     public List<RequestToAdd> findWhereActiveEquals(boolean isActive) throws Exception {
         return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
     }
@@ -88,12 +76,6 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
                 + " AND " + COLUMN_USER_ID_FK + " = ?"
                 + " AND " + COLUMN_IS_ACTIVE + " = ?",
                 activityId, userId, isActive));
-    }
-
-    @Override
-    public List<RequestToAdd> findRequestsToAddByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
     }
 
     @Override

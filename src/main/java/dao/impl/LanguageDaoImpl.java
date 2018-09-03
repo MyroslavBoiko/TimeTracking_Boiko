@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class LanguageDaoImpl implements LanguageDao {
 
     private static final Logger LOGGER = Logger.getLogger(LanguageDaoImpl.class);
@@ -52,27 +56,9 @@ public class LanguageDaoImpl implements LanguageDao {
     }
 
     @Override
-    public Language findWhereLanguageIdEquals(Long languageId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_LANGUAGE_ID_PK + " = ?", languageId));
-    }
-
-    @Override
-    public Language findWhereLanguageNameEquals(String languageName) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_LANGUAGE_NAME + " = ?", languageName));
-    }
-
-    @Override
     public Language findWhereLanguageCodeEquals(String languageCode) throws Exception {
         return  fetchSingleResult(findByVaryingParams(SQL_SELECT
                 + " WHERE " + COLUMN_LANGUAGE_CODE + " = ?", languageCode));
-    }
-
-    @Override
-    public List<Language> findLanguagesByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
     }
 
     @Override
@@ -114,18 +100,6 @@ public class LanguageDaoImpl implements LanguageDao {
             throw new SQLException();
         }
         return result;
-    }
-
-    @Override
-    public void insertNewLanguage(Language language) throws Exception {
-        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_LANGUAGE),
-                     language.getLanguageName(), language.getLanguageCode())) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewLanguage method of LanguageDaoImpl class.");
-            throw new SQLException();
-        }
     }
 
     private Language fetchSingleResult(List<Language> languages) {

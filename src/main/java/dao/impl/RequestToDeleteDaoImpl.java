@@ -16,6 +16,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
 
     private static final Logger LOGGER = Logger.getLogger(RequestToDeleteDaoImpl.class);
@@ -56,31 +60,8 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     }
 
     @Override
-    public RequestToDelete findWhereDeleteIdEquals(Long deleteId) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_DELETE_ID_PK + " = ?", deleteId));
-    }
-
-    @Override
-    public RequestToDelete findWhereAssignIdEquals(Long assignId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ASSIGN_ID_FK + " = ?", assignId));
-    }
-
-    @Override
-    public List<RequestToDelete> findWhereUserIdEquals(Long userId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_USER_ID_FK + " = ?", userId);
-    }
-
-    @Override
     public List<RequestToDelete> findWhereActiveEquals(boolean isActive) throws Exception {
         return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
-    }
-
-    @Override
-    public List<RequestToDelete> findRequestsToDeleteByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
     }
 
     @Override

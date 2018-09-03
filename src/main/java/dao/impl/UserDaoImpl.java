@@ -11,6 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class UserDaoImpl implements UserDao {
 
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
@@ -63,11 +67,6 @@ public class UserDaoImpl implements UserDao {
     public User findWhereEmailEquals(String email) throws Exception {
         return fetchSingleResult(findByVaryingParams(SQL_SELECT
                 + " WHERE " + COLUMN_EMAIL + " = ?", email));
-    }
-
-    @Override
-    public List<User> findWhereUserTypeIdEquals(Long userTypeId) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_USER_TYPE_ID_FK + " = ?", userTypeId);
     }
 
     @Override

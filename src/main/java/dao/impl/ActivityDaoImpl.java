@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class ActivityDaoImpl implements ActivityDao {
 
     private static final Logger LOGGER = Logger.getLogger(ActivityDaoImpl.class);
@@ -105,18 +109,6 @@ public class ActivityDaoImpl implements ActivityDao {
             return result;
         } catch (SQLException e) {
             LOGGER.error("Exception in findByVaryingParams method of ActivityDaoImpl class.");
-            throw new SQLException();
-        }
-    }
-
-    @Override
-    public void insertNewActivity(Activity activity) throws Exception {
-        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_ACTIVITY),
-                     activity.getDescription())) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewActivity method of ActivityDaoImpl class.");
             throw new SQLException();
         }
     }

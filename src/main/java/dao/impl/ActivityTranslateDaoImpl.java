@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
 
     private static final Logger LOGGER = Logger.getLogger(ActivityTranslateDaoImpl.class);
@@ -69,29 +73,8 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
     }
 
     @Override
-    public ActivityTranslate findWhereTranslateIdEquals(Long transalteId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT_BY_TRANSLATE_ID, transalteId));
-    }
-
-    @Override
     public ActivityTranslate findWhereActivityIdAndLanguageIdEquals(Long activityId, Long languageId) throws Exception {
         return fetchSingleResult(findByVaryingParams(SQL_SELECT_BY_ACTIVITY_ID_AND_LANG_ID, activityId, languageId));
-    }
-
-    @Override
-    public List<ActivityTranslate> findWhereLanguageIdEquals(Long languageId) throws Exception {
-        return findByVaryingParams(SQL_SELECT_BY_LANGUAGE_ID, languageId);
-    }
-
-    @Override
-    public List<ActivityTranslate> findWhereActivityIdEquals(Long activityId) throws Exception {
-        return findByVaryingParams(SQL_SELECT_BY_ACTIVITY_ID, activityId);
-    }
-
-    @Override
-    public List<ActivityTranslate> findActivityTranslatesByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
     }
 
     @Override
@@ -132,18 +115,6 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
             return result;
         }catch (SQLException e) {
             LOGGER.error("Exception in findByVaryingParams method of ActivityTranslateDaoImpl class.");
-            throw new SQLException();
-        }
-    }
-
-    @Override
-    public void insertNewActivityTranslate(ActivityTranslate activityTranslate) throws Exception {
-        try (ConnectionHolder connectionHolder = TRANSACTION_MANAGER.getConnection();
-             PreparedStatement statement = PreparedStatementBuilder.setValues(connectionHolder.prepareStatement(SQL_INSERT_TRANSLATE),
-                     activityTranslate.getActivityId(), activityTranslate.getActivityId(), activityTranslate.getDescription())) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("Exception in insertNewActivityTranslate method of ActivityTranslateDaoImpl class.");
             throw new SQLException();
         }
     }

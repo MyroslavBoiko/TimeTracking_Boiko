@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mirosha
+ */
+
 public class AssignmentDaoImpl implements AssignmentDao {
 
     private static final Logger LOGGER = Logger.getLogger(AssignmentDaoImpl.class);
@@ -69,22 +73,9 @@ public class AssignmentDaoImpl implements AssignmentDao {
     }
 
     @Override
-    public Assignment findWhereAssignIdEquals(Long assignId) throws Exception {
-        return  fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ASSIGN_ID_PK + " = ?", assignId));
-    }
-
-    @Override
     public Assignment findWhereAssignIdAndIsActiveEquals(Long assignId, boolean isActive) throws Exception {
         return  fetchSingleResult(findByVaryingParams(SQL_SELECT
                 + " WHERE " + COLUMN_ASSIGN_ID_PK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", assignId, isActive));
-    }
-
-    @Override
-    public Assignment findWhereEmailAndDescriptionEquals(String email, String description) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT + " WHERE "
-                + COLUMN_USER_EMAIL_FK + " = ?"
-                + " AND " +  COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?", email, description));
     }
 
     @Override
@@ -92,11 +83,6 @@ public class AssignmentDaoImpl implements AssignmentDao {
         return fetchSingleResult(findByVaryingParams(SQL_SELECT + " WHERE "
                 + COLUMN_USER_EMAIL_FK + " = ?"
                 + " AND " +  COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", email, description, isActive));
-    }
-
-    @Override
-    public List<Assignment> findWhereUserEmailEquals(String userEmail) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_USER_EMAIL_FK + " = ?", userEmail);
     }
 
     @Override
@@ -108,12 +94,6 @@ public class AssignmentDaoImpl implements AssignmentDao {
     @Override
     public List<Assignment> findWhereActiveEquals(boolean isActive) throws Exception {
         return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
-    }
-
-    @Override
-    public List<Assignment> findAssignmentsByLimit(int currentPage, int recordsPerPage) throws Exception {
-        int start = currentPage * recordsPerPage - recordsPerPage;
-        return findByVaryingParams(SQL_SELECT_LIMIT, start, recordsPerPage);
     }
 
     @Override
