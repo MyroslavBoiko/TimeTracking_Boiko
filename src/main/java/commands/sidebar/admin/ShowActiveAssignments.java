@@ -16,8 +16,9 @@ public class ShowActiveAssignments implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page;
+        String lang = (String)request.getSession().getAttribute("language");
         AssignmentsService service = ServiceFactory.getAssignmentsService();
-        List<Assignment> assignments = service.getActiveAssignments();
+        List<Assignment> assignments = service.getActiveAssignments(lang);
         request.setAttribute("assignments", assignments);
         page = PagesJsp.getInstance().getProperty(PagesJsp.ACTIVE_ASSIGNMENTS);
         request.setAttribute("currentPage", page);

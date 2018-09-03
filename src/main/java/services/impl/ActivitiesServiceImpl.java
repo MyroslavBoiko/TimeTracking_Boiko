@@ -2,10 +2,15 @@ package services.impl;
 
 import dao.DaoFactory;
 import dao.interfaces.ActivityDao;
+import dao.interfaces.ActivityTranslateDao;
+import dao.interfaces.LanguageDao;
 import entities.Activity;
+import entities.ActivityTranslate;
+import entities.Language;
 import org.apache.log4j.Logger;
 import services.interfaces.ActivitiesService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitiesServiceImpl implements ActivitiesService {
@@ -24,21 +29,25 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     private ActivitiesServiceImpl(){}
 
     @Override
-    public List<Activity> getAllActivities(){
+    public List<ActivityTranslate> getActivitiesPerPage(int currentPage, int recordsPerPage, String locale) {
         ActivityDao activityDao = DaoFactory.createActivityDao();
-        try{
-            return activityDao.findAll();
-        }catch (Exception e){
-            LOGGER.error("Exception in getAllActivities method.");
-        }
-        return null;
-    }
-    @Override
-    public List<Activity> getActivitiesPerPage(int currentPage, int recordsPerPage){
-        ActivityDao activityDao = DaoFactory.createActivityDao();
-        try{
-            return activityDao.findActivitiesByLimit(currentPage, recordsPerPage);
-        }catch (Exception e){
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+        LanguageDao languageDao = DaoFactory.createLanguageDao();
+        Language language;
+        List<Activity> activities;
+        List<ActivityTranslate> resultList = new ArrayList<>();
+        try {
+            language = languageDao.findWhereLanguageCodeEquals(locale);
+            activities = activityDao.findActivitiesByLimit(currentPage, recordsPerPage);
+            if (language == null) {
+                return null;
+            }
+            for (Activity activity : activities) {
+                resultList.add(activityTranslateDao.findWhereActivityIdAndLanguageIdEquals(activity.getActivityId(), language.getLanguageId()));
+            }
+
+            return resultList;
+        } catch (Exception e) {
             LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
         }
         return null;

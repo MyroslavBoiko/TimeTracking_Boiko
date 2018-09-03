@@ -3,6 +3,10 @@ package dao;
 import dao.impl.*;
 import dao.interfaces.*;
 
+/**
+ * @author Mirosha
+ */
+
 public class DaoFactory {
 
     public static UserTypeDao createUserTypeDao(){

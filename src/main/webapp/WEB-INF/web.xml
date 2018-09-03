@@ -30,4 +30,10 @@
     <session-config>
         <session-timeout>5</session-timeout>
     </session-config>
+    <listener>
+        <listener-class>listeners.SessionListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>listeners.RequestListener</listener-class>
+    </listener>
 </web-app>

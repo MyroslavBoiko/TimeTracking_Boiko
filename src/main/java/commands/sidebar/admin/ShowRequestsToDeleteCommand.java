@@ -21,12 +21,13 @@ public class ShowRequestsToDeleteCommand implements Command {
         String page;
         final int recordsPerPage = 5;
         RequestsService service = ServiceFactory.getRequestsService();
-        Paginator paginator = new Paginator(service.getCountOfRowsRequestToDelete(), recordsPerPage);
+        Paginator paginator = new Paginator(service.getCountOfRowsRequestToDelete(true), recordsPerPage);
         String pageParameter = request.getParameter("page");
+        String language = (String)request.getSession().getAttribute("language");
         if(pageParameter != null){
             paginator.setCurrentPage(Integer.valueOf(pageParameter));
         }
-        List<Pair<String, String>> requests = service.getRequestsToDeletePerPage(paginator.getCurrentPage(), recordsPerPage);
+        List<Pair<String, String>> requests = service.getRequestsToDeletePerPage(paginator.getCurrentPage(), recordsPerPage, language);
         request.setAttribute("requestsToDelete", requests);
         request.setAttribute("pagesCount", paginator.getPagesCount());
         page = PagesJsp.getInstance().getProperty(PagesJsp.REQUESTS_TO_DELETE);

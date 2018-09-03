@@ -50,6 +50,10 @@ public class Datasource {
         return instance;
     }
 
+    /**
+     *
+     * @return Connection from Connection pool
+     */
     public Connection getConnection() {
         Connection connection = null;
         LOGGER.info("Return the object of DataSource class.");

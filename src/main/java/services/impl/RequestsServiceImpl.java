@@ -28,15 +28,16 @@ public class RequestsServiceImpl implements RequestsService {
 
     @Transaction
     @Override
-    public boolean createRequest(User user, String activityDescription) {
-        ActivityDao activityDao = DaoFactory.createActivityDao();
+    public boolean createRequest(User user, String description) {
+//        ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
-
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
         try{
-            Activity activity = activityDao.findWhereDescriptionEquals(activityDescription);
+            Long activityId = activityTranslateDao.findWhereDescriptionEquals(description).getActivityId();
+//            Activity activity = activityDao.findWhereActivityIdEquals(activityId);
             RequestToAdd requestToAdd = new RequestToAdd();
             requestToAdd.setUserId(user.getUserId());
-            requestToAdd.setActivityId(activity.getActivityId());
+            requestToAdd.setActivityId(activityId);
             requestToAddDao.insertNewRequestToAdd(requestToAdd);
             return true;
         }catch (Exception e){
@@ -46,10 +47,10 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public int getCountOfRowsRequestToAdd() {
+    public int getCountOfRowsRequestToAdd(boolean isActive) {
         RequestToAddDao requestToAddDao = DaoFactory.createRequestToAddDao();
         try{
-            return requestToAddDao.getNumberOfRows();
+            return requestToAddDao.getNumberByActive(isActive);
         }catch (Exception e){
             LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
         }
@@ -57,7 +58,7 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public int getCountOfRowsRequestToDelete() {
+    public int getCountOfRowsRequestToDelete(boolean isActive) {
         RequestToDeleteDao requestToDelete = DaoFactory.createRequestToDeleteDao();
         try{
             return requestToDelete.getNumberOfRows();
@@ -68,36 +69,46 @@ public class RequestsServiceImpl implements RequestsService {
     }
 
     @Override
-    public List<Pair<String,String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage){
+    public List<Pair<String,String>> getRequestsToAddPerPage(int currentPage, int recordsPerPage, String language){
         List<Pair<String,String>> result = new ArrayList<>();
         UserDao userDao = DaoFactory.createUserDao();
-        ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+        LanguageDao languageDao = DaoFactory.createLanguageDao();
         try{
-            List<RequestToAdd> requestsToAdd = requestDao.findRequestsToAddByLimit(currentPage, recordsPerPage);
+            List<RequestToAdd> requestsToAdd = requestDao.findRequestsToAddIsActiveByLimit(true, currentPage, recordsPerPage);
             for(RequestToAdd request : requestsToAdd){
                 User user = userDao.findWhereUserIdEquals(request.getUserId());
-                Activity activity = activityDao.findWhereActivityIdEquals(request.getActivityId());
-                result.add(new Pair<>(user.getEmail(), activity.getDescription()));
+                ActivityTranslate activityTranslate = activityTranslateDao.findWhereActivityIdAndLanguageIdEquals(request.getActivityId(),
+                        languageDao.findWhereLanguageCodeEquals(language).getLanguageId());
+                result.add(new Pair<>(user.getEmail(), activityTranslate.getDescription()));
             }
             return result;
         }catch (Exception e){
-            LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.");
+            LOGGER.error("Exception in UsersServiceImpl in getRequestsToAddPerPage method.", e);
         }
         return null;
     }
 
     @Override
-    public List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage) {
+    public List<Pair<String, String>> getRequestsToDeletePerPage(int currentPage, int recordsPerPage, String language) {
         List<Pair<String,String>> result = new ArrayList<>();
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         RequestToDeleteDao requestDao = DaoFactory.createRequestToDeleteDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+        LanguageDao languageDao = DaoFactory.createLanguageDao();
         try{
-            List<RequestToDelete> requestsToDelete = requestDao.findRequestsToDeleteByLimit(currentPage, recordsPerPage);
+            Language lang = languageDao.findWhereLanguageCodeEquals(language);
+            List<RequestToDelete> requestsToDelete = requestDao.findRequestsToDeleteIsActiveByLimit(true,
+                    currentPage, recordsPerPage);
             for(RequestToDelete request : requestsToDelete){
                 Assignment assignment = assignmentDao.findWhereAssignIdAndIsActiveEquals(request.getAssignId(), true);
                 if(assignment != null){
-                    result.add(new Pair<>(assignment.getUserEmail(), assignment.getActivityDescription()));
+                    ActivityTranslate activityTranslate =
+                            activityTranslateDao.findWhereDescriptionEquals(assignment.getActivityDescription());
+                    Long activityId = activityTranslate.getActivityId();
+                    result.add(new Pair<>(assignment.getUserEmail(),
+                            activityTranslateDao.findWhereActivityIdAndLanguageIdEquals(activityId, lang.getLanguageId()).getDescription()));
                 }
             }
             return result;
@@ -112,25 +123,24 @@ public class RequestsServiceImpl implements RequestsService {
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
-        boolean result = false;
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
         try{
-            Activity activity = activityDao.findWhereDescriptionEquals(description);
+            Long activityId = activityTranslateDao.findWhereDescriptionEquals(description).getActivityId();
+            Activity activity = activityDao.findWhereActivityIdEquals(activityId);
             RequestToAdd requestToAdd = requestDao.findWhereActivityIdAndUserIdEquals(activity.getActivityId(),
                     user.getUserId(), true);
-            if(requestToAdd != null) {
-                result = false;
-            } else {
-                Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(user.getEmail(), description, true);
-                if (assignment != null) {
-                    result = false;
+            if(requestToAdd == null) {
+                Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(user.getEmail(), activity.getDescription(), true);
+                if (assignment == null) {
+                    return true;
                 }else{
-                    result = true;
+                    return false;
                 }
             }
         }catch (Exception e){
             LOGGER.error("Exception in checkUsedActivity method.");
         }
-        return result;
+        return false;
     }
 
     @Override
@@ -197,28 +207,13 @@ public class RequestsServiceImpl implements RequestsService {
         return null;
     }
 
-    public List<RequestToAdd> getUserRequestsToAdd(String email){
-        RequestToAddDao request = DaoFactory.createRequestToAddDao();
-        UserDao userDao = DaoFactory.createUserDao();
-
-        List<RequestToAdd> result;
-        try{
-            User user = userDao.findWhereEmailEquals(email);
-            result = request.findWhereUserIdEquals(user.getUserId());
-            return result;
-        }catch (Exception e){
-            LOGGER.error("Exception in getUserRequestsToAdd method.");
-        }
-        return null;
-    }
-
     @Override
-    public boolean setInactiveToRequest(String userEmail, String activityDescription){
+    public boolean setInactiveToRequest(String userEmail, String description){
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
         RequestToAddDao requestDao = DaoFactory.createRequestToAddDao();
         try{
-            Long activityId = activityDao.findWhereDescriptionEquals(activityDescription).getActivityId();
+            Long activityId = activityDao.findWhereDescriptionEquals(description).getActivityId();
             Long userId = userDao.findWhereEmailEquals(userEmail).getUserId();
             requestDao.setInactiveRequestToAdd(activityId,userId);
             return true;
@@ -233,12 +228,16 @@ public class RequestsServiceImpl implements RequestsService {
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
         RequestToDeleteDao requestToDeleteDao = DaoFactory.createRequestToDeleteDao();
         UserDao userDao = DaoFactory.createUserDao();
-        User user;
-        Assignment assignment;
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+
         RequestToDelete requestToDelete = new RequestToDelete();
         try{
-            user = userDao.findWhereEmailEquals(email);
-            assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(email,description, true);
+            User user = userDao.findWhereEmailEquals(email);
+            Long activityId = activityTranslateDao.findWhereDescriptionEquals(description).getActivityId();
+            activityDao.findWhereActivityIdEquals(activityId);
+            Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(email,
+                    activityDao.findWhereActivityIdEquals(activityId).getDescription(),true);
             requestToDelete.setAssignId(assignment.getAssignId());
             requestToDelete.setUserId(user.getUserId());
             requestToDeleteDao.insertNewRequestToDelete(requestToDelete);

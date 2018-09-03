@@ -1,16 +1,14 @@
 package services.impl;
 
+import annotation.Transaction;
 import dao.DaoFactory;
-import dao.interfaces.ActivityDao;
-import dao.interfaces.AssignmentDao;
-import dao.interfaces.UserDao;
-import entities.Activity;
-import entities.Assignment;
-import entities.User;
+import dao.interfaces.*;
+import entities.*;
 import org.apache.log4j.Logger;
 import services.ServiceFactory;
 import services.interfaces.AssignmentsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentsServiceImpl implements AssignmentsService {
@@ -29,11 +27,20 @@ public class AssignmentsServiceImpl implements AssignmentsService {
     private AssignmentsServiceImpl(){}
 
     @Override
-    public List<Assignment> getActiveAssignments(){
+    public List<Assignment> getActiveAssignments(String language){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
-        List<Assignment> assignments;
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+        LanguageDao languageDao = DaoFactory.createLanguageDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        List<Assignment> result = new ArrayList<>();
         try{
-           assignments = assignmentDao.findWhereActiveEquals(true);
+            Long langId = languageDao.findWhereLanguageCodeEquals(language).getLanguageId();
+            List<Assignment> assignments = assignmentDao.findWhereActiveEquals(true);
+            for(Assignment assignment : assignments){
+                Long activityId = activityDao.findWhereDescriptionEquals(assignment.getActivityDescription()).getActivityId();
+                assignment.setActivityDescription(activityTranslateDao.findWhereActivityIdAndLanguageIdEquals(activityId, langId).getDescription());
+                result.add(assignment);
+            }
            return assignments;
         }catch (Exception e){
             LOGGER.error("Exception in getActiveAssignments method.");
@@ -42,18 +49,20 @@ public class AssignmentsServiceImpl implements AssignmentsService {
     }
 
     @Override
-    public boolean createAssignment(String email, String activityDescription){
+    public boolean createAssignment(String email, String description){
         UserDao userDao = DaoFactory.createUserDao();
         ActivityDao activityDao = DaoFactory.createActivityDao();
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
         try{
             User user = userDao.findWhereEmailEquals(email);
-            Activity activity = activityDao.findWhereDescriptionEquals(activityDescription);
+            ActivityTranslate activityTranslate = activityTranslateDao.findWhereDescriptionEquals(description);
+            Activity activity = activityDao.findWhereActivityIdEquals(activityTranslate.getActivityId());
             Assignment assignment = new Assignment();
             assignment.setUserEmail(user.getEmail());
             assignment.setActivityDescription(activity.getDescription());
             assignmentDao.insertNewAssignment(assignment);
-            ServiceFactory.getRequestsService().setInactiveToRequest(email,activityDescription);
+            ServiceFactory.getRequestsService().setInactiveToRequest(email,activity.getDescription());
             return true;
         }catch (Exception e){
             LOGGER.error("Exception in createAssignment method.");
@@ -77,11 +86,13 @@ public class AssignmentsServiceImpl implements AssignmentsService {
     @Override
     public boolean saveTime(String email, String description, String time){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
         try{
-            Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(email, description, true);
+            Long activityId = activityTranslateDao.findWhereDescriptionEquals(description).getActivityId();
+            Activity activity = activityDao.findWhereActivityIdEquals(activityId);
+            Assignment assignment = assignmentDao.findWhereEmailDescriptionActiveEquals(email, activity.getDescription(), true);
             Long longTime = Long.parseLong(time);
-            System.out.println(longTime);
-            System.out.println(assignment.getAssignId());
             assignmentDao.updateAssignmentTotalTime(assignment.getAssignId(), longTime);
             return true;
         }catch (Exception e){
@@ -90,11 +101,19 @@ public class AssignmentsServiceImpl implements AssignmentsService {
         return false;
     }
 
+    @Transaction
     @Override
     public boolean setAssignInactive(String email, String description){
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        RequestToDeleteDao requestToDeleteDao = DaoFactory.createRequestToDeleteDao();
+        ActivityTranslateDao activityTranslateDao = DaoFactory.createActivityTranslateDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
         try {
-            assignmentDao.setInactive(email, description);
+            Long activityId = activityTranslateDao.findWhereDescriptionEquals(description).getActivityId();
+            Long assignId = assignmentDao.findWhereEmailDescriptionActiveEquals(email,
+                    activityDao.findWhereActivityIdEquals(activityId).getDescription(),true).getAssignId();
+            requestToDeleteDao.setInactive(assignId);
+            assignmentDao.setInactive(email, activityDao.findWhereActivityIdEquals(activityId).getDescription());
             return true;
         }catch (Exception e){
             LOGGER.error("Exception in setAssignInactive method.");
@@ -113,11 +132,22 @@ public class AssignmentsServiceImpl implements AssignmentsService {
     }
 
     @Override
-    public List<Assignment> getUserAssignmentsPerPage(String email,boolean isActive, int currentPage, int recordsPerPage ){
-        List<Assignment> result;
+    public List<Assignment> getUserAssignmentsPerPage(String email,String language, boolean isActive, int currentPage, int recordsPerPage){
+        List<Assignment> assignments;
+        List<Assignment> result = new ArrayList<>();
         AssignmentDao assignmentDao = DaoFactory.createAssignmentDao();
+        LanguageDao languageDao = DaoFactory.createLanguageDao();
+        ActivityDao activityDao = DaoFactory.createActivityDao();
+        ActivityTranslateDao activityTranslate = DaoFactory.createActivityTranslateDao();
         try {
-            result = assignmentDao.findAssignmentsByLimitForUser(email, isActive, currentPage, recordsPerPage);
+            Language lang = languageDao.findWhereLanguageCodeEquals(language);
+            assignments = assignmentDao.findAssignmentsByLimitForUser(email, isActive, currentPage, recordsPerPage);
+            for(Assignment assignment : assignments){
+                Activity activity = activityDao.findWhereDescriptionEquals(assignment.getActivityDescription());
+                ActivityTranslate translate = activityTranslate.findWhereActivityIdAndLanguageIdEquals(activity.getActivityId(), lang.getLanguageId());
+                assignment.setActivityDescription(translate.getDescription());
+                result.add(assignment);
+            }
             return result;
         }catch (Exception e){
             LOGGER.error("Exception in getUserAssignments method.");

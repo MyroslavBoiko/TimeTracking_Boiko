@@ -19,7 +19,7 @@
             <p><fmt:message key="email" bundle="${locale}"/></p>
             <input type="text" name="email"
                    placeholder="<fmt:message key="enterEmail" bundle="${locale}"/>"
-                   value="<c:if test="${not empty emailHold}">${emailHold}</c:if>" required/>
+                   value="<c:if test="${not empty requestScope.emailHold}">${requestScope.emailHold}</c:if>" required/>
 
             <c:if test="${not empty requestScope.emailError}">
 
@@ -35,7 +35,7 @@
             <p><fmt:message key="firstName" bundle="${locale}"/></p>
             <input type="text" name="firstName"
                    placeholder="<fmt:message key="enterFirstName" bundle="${locale}"/>"
-                   value="<c:if test="${not empty firstNameHold}">${firstNameHold}</c:if>" required/>
+                   value="<c:if test="${not empty requestScope.firstNameHold}">${requestScope.firstNameHold}</c:if>" required/>
             <c:if test="${not empty requestScope.firstNameError}">
                 <label class="error"><fmt:message key="${requestScope.firstNameError}" bundle="${messages}"/> </label>
             </c:if>
@@ -43,7 +43,7 @@
             <p><fmt:message key="lastName" bundle="${locale}"/></p>
             <input type="text" name="lastName"
                    placeholder="<fmt:message key="enterLastName" bundle="${locale}"/>"
-                   value="<c:if test="${not empty lastNameHold}">${lastNameHold}</c:if>" required/>
+                   value="<c:if test="${not empty requestScope.lastNameHold}">${requestScope.lastNameHold}</c:if>" required/>
 
             <c:if test="${not empty requestScope.lastNameError}">
                 <label class="error"><fmt:message key="${requestScope.lastNameError}" bundle="${messages}"/> </label>
