@@ -34,18 +34,27 @@ public class RequestToDeleteDaoImpl implements RequestToDeleteDao {
     private static final String COLUMN_IS_ACTIVE = "is_active";
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_REQUEST_TO_DELETE;
+
+    private static final String SQL_SELECT_WHERE_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+
     private static final String SQL_INSERT_REQUEST_TO_DELETE = "INSERT INTO " + TABLE_REQUEST_TO_DELETE
             + " (" + COLUMN_ASSIGN_ID_FK + ","
             + COLUMN_USER_ID_FK + ") "
             + "VALUES (?,?)";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE;
+
     private static final String SQL_SELECT_COUNT_IS_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_DELETE
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+
     private static final String SQL_UPDATE_SET_INACTIVE = "UPDATE " + TABLE_REQUEST_TO_DELETE
             + " SET " + COLUMN_IS_ACTIVE + " = false"
             + " WHERE " + COLUMN_ASSIGN_ID_FK + " = ?";
+
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
 
     private RequestToDeleteDaoImpl() {

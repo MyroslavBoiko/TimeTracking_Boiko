@@ -34,6 +34,13 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_REQUEST_TO_ADD;
 
+    private static final String SQL_SELECT_WHERE_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+
+    private static final String SQL_SELECT_WHERE_ACTIVITY_USER_ACTIVE = SQL_SELECT
+            + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?"
+            + " AND " + COLUMN_USER_ID_FK + " = ?"
+            + " AND " + COLUMN_IS_ACTIVE + " = ?";
+
     private static final String SQL_INSERT_REQUEST_TO_ADD = "INSERT INTO " + TABLE_REQUEST_TO_ADD
             + " (" + COLUMN_ACTIVITY_ID_FK + ","
             + COLUMN_USER_ID_FK + ")"
@@ -43,9 +50,13 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
             + COLUMN_IS_ACTIVE + " = " + false
             + " WHERE " + COLUMN_USER_ID_FK + " = ?" + " AND "
             + COLUMN_ACTIVITY_ID_FK + " = ?";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_LIMIT_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD;
+
     private static final String SQL_SELECT_COUNT_IS_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_REQUEST_TO_ADD
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
 
@@ -68,15 +79,12 @@ public class RequestToAddDaoImpl implements RequestToAddDao {
 
     @Override
     public List<RequestToAdd> findWhereActiveEquals(boolean isActive) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
+        return findByVaryingParams(SQL_SELECT_WHERE_ACTIVE, isActive);
     }
 
     @Override
     public RequestToAdd findWhereActivityIdAndUserIdEquals(Long activityId, Long userId, boolean isActive) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                        + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?"
-                        + " AND " + COLUMN_USER_ID_FK + " = ?"
-                        + " AND " + COLUMN_IS_ACTIVE + " = ?",
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_ACTIVITY_USER_ACTIVE,
                 activityId, userId, isActive));
     }
 

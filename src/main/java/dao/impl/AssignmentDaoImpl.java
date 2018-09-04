@@ -38,6 +38,18 @@ public class AssignmentDaoImpl implements AssignmentDao {
             + COLUMN_USER_EMAIL_FK + ") "
             + "VALUES (?,?)";
 
+    private static final String SQL_SELECT_WHERE_ASSIGN_ID_AND_IS_ACTIVE = SQL_SELECT
+            + " WHERE " + COLUMN_ASSIGN_ID_PK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?";
+
+    private static final String SQL_SELECT_WHERE_EMAIL_DESCRIPTION_ACTIVE = SQL_SELECT + " WHERE "
+            + COLUMN_USER_EMAIL_FK + " = ?"
+            + " AND " + COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?";
+
+    private static final String SQL_SELECT_WHERE_EMAIL_AND_ACTIVE =  SQL_SELECT + " WHERE " + COLUMN_USER_EMAIL_FK + " = ?"
+            + " AND " + COLUMN_IS_ACTIVE + " = ?";
+
+    private static final String SQL_SELECT_WHERE_ACTIVE = SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+
     private static final String SQL_UPDATE_ASSIGNMENT_SET_TIME = "UPDATE " + TABLE_ASSIGNMENT
             + " SET " + COLUMN_TOTAL_TIME + " = ? "
             + "WHERE " + COLUMN_ASSIGN_ID_PK + " = ?";
@@ -46,14 +58,20 @@ public class AssignmentDaoImpl implements AssignmentDao {
             + " SET " + COLUMN_IS_ACTIVE + " = false"
             + " WHERE " + COLUMN_USER_EMAIL_FK + " = ?"
             + " AND " + COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_LIMIT_WHERE_CLAUSE = SQL_SELECT + " WHERE "
             + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_LIMIT_FOR_USER = SQL_SELECT + " WHERE "
             + COLUMN_USER_EMAIL_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?" + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT;
+
     private static final String SQL_SELECT_COUNT_BY_ACTIVE = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
             + " WHERE " + COLUMN_IS_ACTIVE + " = ?";
+
     private static final String SQL_SELECT_COUNT_FOR_USER = "SELECT COUNT(*) FROM " + TABLE_ASSIGNMENT
             + " WHERE " + COLUMN_USER_EMAIL_FK + " = ? " + "AND " + COLUMN_IS_ACTIVE + " = ?";
 
@@ -76,26 +94,22 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     @Override
     public Assignment findWhereAssignIdAndIsActiveEquals(Long assignId, boolean isActive) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_ASSIGN_ID_PK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", assignId, isActive));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_ASSIGN_ID_AND_IS_ACTIVE, assignId, isActive));
     }
 
     @Override
     public Assignment findWhereEmailDescriptionActiveEquals(String email, String description, boolean isActive) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT + " WHERE "
-                + COLUMN_USER_EMAIL_FK + " = ?"
-                + " AND " + COLUMN_ACTIVITY_DESCRIPTION_FK + " = ?" + " AND " + COLUMN_IS_ACTIVE + " = ?", email, description, isActive));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_EMAIL_DESCRIPTION_ACTIVE, email, description, isActive));
     }
 
     @Override
     public List<Assignment> findWhereUserEmailAndActiveEquals(String userEmail, boolean isActive) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_USER_EMAIL_FK + " = ?"
-                + " AND " + COLUMN_IS_ACTIVE + " = ?", userEmail, isActive);
+        return findByVaryingParams(SQL_SELECT_WHERE_EMAIL_AND_ACTIVE, userEmail, isActive);
     }
 
     @Override
     public List<Assignment> findWhereActiveEquals(boolean isActive) throws Exception {
-        return findByVaryingParams(SQL_SELECT + " WHERE " + COLUMN_IS_ACTIVE + " = ?", isActive);
+        return findByVaryingParams(SQL_SELECT_WHERE_ACTIVE, isActive);
     }
 
     @Override

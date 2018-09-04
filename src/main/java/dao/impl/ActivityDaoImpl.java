@@ -29,14 +29,19 @@ public class ActivityDaoImpl implements ActivityDao {
     private static final String COLUMN_ACTIVITY_DESCRIPTION = "description";
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_ACTIVITY;
+
     private static final String SQL_INSERT_ACTIVITY = "INSERT INTO " + TABLE_ACTIVITY
             + " (" + COLUMN_ACTIVITY_DESCRIPTION + ") "
             + "VALUES (?)";
+
     private static final String SQL_SELECT_BY_ACTIVITY_ID = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_ID_PK + " = ?";
+
     private static final String SQL_SELECT_BY_DESCRIPTION = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_DESCRIPTION + " = ?";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ACTIVITY;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();

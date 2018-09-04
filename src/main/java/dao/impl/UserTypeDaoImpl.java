@@ -33,6 +33,12 @@ public class UserTypeDaoImpl implements UserTypeDao {
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_USER_TYPE;
 
+    private static final String SQL_SELECT_WHERE_USER_TYPE = SQL_SELECT
+            + " WHERE " + COLUMN_USER_TYPE_ID_PK + " = ?";
+
+    private static final String SQL_SELECT_WHERE_TYPE = SQL_SELECT
+            + " WHERE " + COLUMN_TYPE_NAME + " = ?";
+
     private static final String SQL_INSERT_USERTYPE = "INSERT INTO " + TABLE_USER_TYPE
             + " (" + COLUMN_TYPE_NAME + ") "
             + "VALUES (?)";
@@ -59,14 +65,12 @@ public class UserTypeDaoImpl implements UserTypeDao {
 
     @Override
     public UserType findWhereUserTypeIdEquals(Long userTypeId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_USER_TYPE_ID_PK + " = ?", userTypeId));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_USER_TYPE, userTypeId));
     }
 
     @Override
     public UserType findWhereTypeNameEquals(String typeName) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_TYPE_NAME + " = ?", typeName));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_TYPE, typeName));
     }
 
 

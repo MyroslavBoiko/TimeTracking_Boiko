@@ -31,6 +31,13 @@ public class UserDaoImpl implements UserDao {
     private static final String COLUMN_LAST_NAME = "last_name";
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_USER;
+
+    private static final String SQL_SELECT_WHERE_USER_ID = SQL_SELECT
+            + " WHERE " + COLUMN_USER_ID_PK + " = ?";
+
+    private static final String SQL_SELECT_WHERE_EMAIL = SQL_SELECT
+            + " WHERE " + COLUMN_EMAIL + " = ?";
+
     private static final String SQL_INSERT_USER = "INSERT INTO " + TABLE_USER
             + " (" + COLUMN_USER_TYPE_ID_FK + ","
             + COLUMN_EMAIL + ","
@@ -38,7 +45,9 @@ public class UserDaoImpl implements UserDao {
             + COLUMN_FIRST_NAME + ","
             + COLUMN_LAST_NAME + ") "
             + "VALUES (?,?,?,?,?)";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_USER;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
@@ -60,14 +69,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findWhereUserIdEquals(Long userId) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_USER_ID_PK + " = ?", userId));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_USER_ID, userId));
     }
 
     @Override
     public User findWhereEmailEquals(String email) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_EMAIL + " = ?", email));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_EMAIL, email));
     }
 
     @Override

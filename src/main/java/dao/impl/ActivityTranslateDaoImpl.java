@@ -39,17 +39,24 @@ public class ActivityTranslateDaoImpl implements ActivityTranslateDao {
             + COLUMN_ACTIVITY_ID_FK + ","
             + COLUMN_DESCRIPTION + ") "
             + "VALUES (?,?,?)";
+
     private static final String SQL_SELECT_BY_TRANSLATE_ID = SQL_SELECT
             + " WHERE " + COLUMN_TRANSLATE_ID_PK + " = ?";
+
     private static final String SQL_SELECT_BY_DESCRIPTION = SQL_SELECT
             + " WHERE " + COLUMN_DESCRIPTION + " = ?";
+
     private static final String SQL_SELECT_BY_LANGUAGE_ID = SQL_SELECT
             + " WHERE " + COLUMN_LANGUAGE_ID_FK + " = ?";
+
     private static final String SQL_SELECT_BY_ACTIVITY_ID_AND_LANG_ID = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?" + " AND " + COLUMN_LANGUAGE_ID_FK + " = ?";
+
     private static final String SQL_SELECT_BY_ACTIVITY_ID = SQL_SELECT
             + " WHERE " + COLUMN_ACTIVITY_ID_FK + " = ?";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_ACTIVITY_TRANSLATE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();

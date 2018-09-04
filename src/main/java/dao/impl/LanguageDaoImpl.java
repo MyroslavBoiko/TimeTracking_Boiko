@@ -33,11 +33,16 @@ public class LanguageDaoImpl implements LanguageDao {
 
     private static final String SQL_SELECT = "SELECT * FROM " + TABLE_LANGUAGE;
 
+    private static final String SQL_SELECT_WHERE_LANGUAGE_CODE = SQL_SELECT
+            + " WHERE " + COLUMN_LANGUAGE_CODE + " = ?";
+
     private static final String SQL_INSERT_LANGUAGE = "INSERT INTO " + TABLE_LANGUAGE
             + " (" + COLUMN_LANGUAGE_NAME + ","
             + COLUMN_LANGUAGE_CODE + ") "
             + "VALUES (?,?)";
+
     private static final String SQL_SELECT_LIMIT = SQL_SELECT + " LIMIT ?, ?";
+
     private static final String SQL_SELECT_COUNT = "SELECT COUNT(*) FROM " + TABLE_LANGUAGE;
 
     private final TransactionManager TRANSACTION_MANAGER = TransactionManager.getInstance();
@@ -59,8 +64,7 @@ public class LanguageDaoImpl implements LanguageDao {
 
     @Override
     public Language findWhereLanguageCodeEquals(String languageCode) throws Exception {
-        return fetchSingleResult(findByVaryingParams(SQL_SELECT
-                + " WHERE " + COLUMN_LANGUAGE_CODE + " = ?", languageCode));
+        return fetchSingleResult(findByVaryingParams(SQL_SELECT_WHERE_LANGUAGE_CODE, languageCode));
     }
 
     @Override
