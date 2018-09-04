@@ -28,22 +28,6 @@ public class LoginServiceImpl implements LoginService {
     private LoginServiceImpl() {
     }
 
-    public static boolean isRegistered(String email, String password) {
-        UserDao userDao = DaoFactory.createUserDao();
-
-        try {
-            User user = userDao.findWhereEmailEquals(email);
-            if (user != null) {
-                if (user.getPassword().equals(password)) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("Exception in isRegistered method.", e);
-        }
-        return false;
-    }
-
     @Override
     public UserType getUserType(String email) {
         UserTypeDao userTypeDao = DaoFactory.createUserTypeDao();

@@ -49,7 +49,6 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             for (Activity activity : activities) {
                 resultList.add(activityTranslateDao.findWhereActivityIdAndLanguageIdEquals(activity.getActivityId(), language.getLanguageId()));
             }
-
             return resultList;
         } catch (Exception e) {
             LOGGER.error("Exception in UsersServiceImpl during getting results from UserDao.", e);
