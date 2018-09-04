@@ -49,6 +49,5 @@ public class RegistrationServiceImplTest {
         when(userTypeDao.findWhereTypeNameEquals("Client")).thenReturn(userType);
         doThrow(Exception.class).when(userDao).insertNewUser(user);
         assertFalse(RegistrationServiceImpl.getInstance().performRegistration(user));
-
     }
 }
